@@ -102,7 +102,7 @@ export default function LandingPage() {
                 <div className="container grid gap-8 md:grid-cols-2 items-center relative z-10">
                     <div className="flex flex-col space-y-6">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold islamic-heading">
-                            Professional networking with purpose and values
+                            Professional networking with purpose and values Production
                         </h1>
                         <p className="text-xl text-muted-foreground">
                             Connect, grow, and find opportunities in a network that respects your values and principles.
