@@ -4,7 +4,7 @@ import { useState, useRef } from "react"
 import { useUser } from "@clerk/nextjs"
 import Image from "next/image"
 import { toast } from "sonner"
-import { createPost } from "@/actions/posts"
+import { createPost } from "@/app/actions/posts"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {

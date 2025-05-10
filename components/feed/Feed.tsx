@@ -9,7 +9,7 @@ import {  Bookmark, Lightbulb, User } from "lucide-react"
 import { CreatePostDialog } from "@/components/feed/CreatePost"
 import { UnderDevelopment } from "@/components/shared/UnderDevelopment"
 import { useIsMobile } from "@/hooks/use-mobile"
-import PostFeed from "./PostFeed"
+import { PostFeed } from "./PostFeed"
 
 // Mock posts data
 const initialPosts = [
