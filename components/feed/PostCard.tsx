@@ -29,9 +29,11 @@ interface Post {
 interface PostCardProps {
   post: Post
   onLikeToggle: () => void
+  likeDisabled?: boolean
 }
 
-export function PostCard({ post, onLikeToggle }: PostCardProps) {
+
+export function PostCard({ post, onLikeToggle, likeDisabled }: PostCardProps) {
   const handleBookmark = () => {
     console.log("Bookmark clicked for post:", post.id)
   }
@@ -93,8 +95,8 @@ export function PostCard({ post, onLikeToggle }: PostCardProps) {
 
           <div className="mt-4">
             <div className="flex justify-between text-sm text-muted-foreground mb-2">
-              <span>{post.likes} {post.likes === 1 ? "like" : "likes"}</span>
-              <span>0 comments</span>
+              <span className={post.hasLiked ? "text-primary" : ""}>{post.likes} {post.likes === 1 ? "like" : "likes"}</span>
+              <span >0 comments</span>
             </div>
 
             <Separator className="my-2" />
@@ -104,10 +106,12 @@ export function PostCard({ post, onLikeToggle }: PostCardProps) {
                 variant="ghost"
                 size="sm"
                 onClick={onLikeToggle}
-                className={post.hasLiked ? "text-primary" : ""}
+                disabled={likeDisabled}
+                className={post.hasLiked ? "text-primary " : ""}
               >
-                <Heart className="h-4 w-4 mr-2" /> Like
+                <Heart className="h-4 w-4 mr-2" fill={post.hasLiked ? "currentColor" : "none"} /> Like
               </Button>
+
               <Button variant="ghost" size="sm">
                 <MessageSquare className="h-4 w-4 mr-2" /> Comment
               </Button>
