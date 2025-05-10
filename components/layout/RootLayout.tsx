@@ -18,6 +18,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { UnderDevelopment } from "@/components/shared/UnderDevelopment"
 import { SignOutButton } from "@clerk/nextjs"
 import { SidebarTrigger } from "../ui/sidebar"
+import { MobileBottomNav } from "./mobile-bottom-nav"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -110,6 +111,7 @@ const RootLayout = ({ children, onOpenCreatePost }: RootLayoutProps) => {
 
       {/* Main content */}
       <main className="flex-1">{children}</main>
+      <MobileBottomNav onOpenCreatePost={onOpenCreatePost} />
     </div>
   )
 }

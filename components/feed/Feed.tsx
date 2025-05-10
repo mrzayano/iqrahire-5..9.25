@@ -120,7 +120,7 @@ export default function Feed() {
 
 
   return (
-    <div className="container py-8">
+    <div className="container py-8 px-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Column - Posts Feed */}
         <div className="md:col-span-2 space-y-6">
@@ -156,7 +156,7 @@ export default function Feed() {
 
 
           {/* Arabic Verse */}
-          <div className="p-4 bg-primary/10 rounded-md text-center">
+          <div className="p-4 bg-primary/10 rounded-md text-center ">
             <p className="text-lg font-semibold mb-2 arabic-text font-arabic"> ﷽</p>
             <p className="text-sm text-muted-foreground">In the name of Allah, the Most Gracious, the Most Merciful</p>
           </div>
