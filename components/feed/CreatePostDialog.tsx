@@ -68,6 +68,7 @@ export function CreatePostDialog({
 
       toast("Success", {
         description: "Your post has been created",
+         duration: 1000,
       })
 
       // Reset form

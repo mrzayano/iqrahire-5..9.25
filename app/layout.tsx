@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           >
             <TooltipProvider>
               <main>{children}</main>
-              <Toaster/>
+              <Toaster className="bg-white z-10 "/>
             </TooltipProvider>
           </ThemeProvider>
         </body>
