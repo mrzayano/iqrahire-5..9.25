@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { likePost, unlikePost } from "@/app/actions/like_actions";
-import { fetchPosts } from "@/app/actions/fetch_posts";
+import { likePost, unlikePost } from "@/actions/like_actions";
+import { fetchPosts } from "@/actions/fetch_posts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -12,34 +12,20 @@ import { Separator } from "../ui/separator";
 import Image from "next/image";
 import { Skeleton } from "../ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Post } from "@/types/feed.post";
 
-// Types
-interface Author {
-  name: string;
-  location: string;
-  avatar: string;
-}
 
-interface Post {
-  id: string;
-  author: Author;
-  content: string;
-  image_url?: string;
-  like_count: number;
-  hasLiked: boolean;
-  created_at: string;
-}
 
 export function PostFeed() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);
-    const isMobile = useIsMobile();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
       setIsLoading(true);
-      const fetchedPosts: Post[] = await fetchPosts();
+      const fetchedPosts: Post[] = await Promise.all(await fetchPosts());
       setPosts(fetchedPosts);
       setIsLoading(false);
     };
@@ -93,8 +79,8 @@ export function PostFeed() {
         ))
       ) : (
         posts.map((post) => (
-          
-          <Card className="w-full mx-auto p-4 px-0 md:p-6 relative animate-fade-in" key={post.id}>
+
+          <Card className="w-fulln mx-auto p-4 px-0 md:p-6 relative animate-fade-in" key={post.id}>
 
             {/* Save icon - top right on mobile */}
             {isMobile && (
@@ -146,7 +132,7 @@ export function PostFeed() {
                 />
               )}
 
-             
+
             </CardContent>
 
             {/* Stats */}
@@ -166,9 +152,9 @@ export function PostFeed() {
                   <Button
                     variant="ghost"
                     size="sm"
-                     onClick={() => toggleLike(post)}
-                     disabled={isPending}
-                     className={post.hasLiked ? "text-primary" : ""}
+                    onClick={() => toggleLike(post)}
+                    disabled={isPending}
+                    className={post.hasLiked ? "text-primary" : ""}
                   >
                     <Heart className={`h-4 w-4 mr-1 ${post.hasLiked ? "fill-current" : ""}`} />
                     <span className="text-xs">Like</span>
@@ -213,7 +199,7 @@ export function PostFeed() {
               )}
             </CardFooter>
 
-         
+
           </Card>
         ))
       )}

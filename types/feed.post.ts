@@ -1,16 +1,19 @@
 // types/feed.post.ts
+
+export interface Author {
+  name: string;
+  avatar: string;
+  location: string;
+}
+
 export interface Post {
   id: string;
   content: string;
   image_url?: string;
-  likes: number;
-  comments: number;
+  created_at: string;
+  like_count: number;
   hasLiked: boolean;
-  hasBookmarked: boolean;
-  user: {
-    fullName: string;
-    title: string;
-    imageUrl?: string;
-  };
-  timeAgo: string;
+  author:Author
 }
+
+

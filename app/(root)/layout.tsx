@@ -5,7 +5,7 @@ import type { ReactNode } from "react"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/layout/app-sidebar"
 import RootLayout from "@/components/layout/RootLayout"
-import { CreatePostDialog } from "@/components/feed/CreatePost"
+import { CreatePostDialog } from "@/components/feed/CreatePostDialog"
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
