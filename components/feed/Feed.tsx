@@ -1,121 +1,15 @@
 "use client"
 
-import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import {  Bookmark, Lightbulb, User } from "lucide-react"
-import { CreatePostDialog } from "@/components/feed/CreatePostDialog"
 import { UnderDevelopment } from "@/components/shared/UnderDevelopment"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { PostFeed } from "./PostFeed"
+import { FeedCard } from "./FeedCard"
 
 // Mock posts data
-const initialPosts = [
-  {
-    id: 1,
-    author: {
-      name: "Ahmed Khan",
-      title: "Software Engineer at TechCorp",
-      avatar: "https://github.com/shadcn.png",
-    },
-    content:
-      "Alhamdulillah! Just completed a major project at work. The team worked tirelessly to deliver quality results on time. Grateful for the opportunity to lead such a talented group of individuals.",
-    timeAgo: "2 hours ago",
-    likes: 42,
-    comments: 8,
-    hasLiked: false,
-    hasBookmarked: false,
-  },
-  {
-    id: 2,
-    author: {
-      name: "Fatima Rahman",
-      title: "Marketing Director at CreativeMinds",
-      avatar: "https://i.pravatar.cc/150?u=fatima",
-    },
-    content:
-      "Excited to announce that our company is hosting a webinar on 'Ethical Marketing Strategies' next week. We'll be discussing how to maintain integrity while achieving business goals. If you're interested, please register through the link in the comments!",
-    timeAgo: "5 hours ago",
-    likes: 78,
-    comments: 15,
-    hasLiked: false,
-    hasBookmarked: false,
-  },
-  {
-    id: 3,
-    author: {
-      name: "Yusuf Ali",
-      title: "Recent Graduate",
-      avatar: "https://i.pravatar.cc/150?u=yusuf",
-    },
-    content:
-      "Just graduated with a degree in Computer Science, Alhamdulillah! Looking for entry-level software development opportunities. If anyone knows of openings in the tech industry that align with Islamic values, please reach out. Jazak Allah Khair!",
-    timeAgo: "1 day ago",
-    likes: 124,
-    comments: 32,
-    hasLiked: false,
-    hasBookmarked: false,
-  },
-]
+
 
 export default function Feed() {
-  const [posts, setPosts] = useState(initialPosts)
-  const [postContent, setPostContent] = useState("")
-  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
-
-  const handleCreatePost = () => {
-    if (!postContent.trim()) return
-
-    const newPost = {
-      id: posts.length + 1,
-      author: {
-        name: "Jane Doe", // Would be current user in real app
-        title: "Your Title",
-        avatar: "https://github.com/shadcn.png",
-      },
-      content: postContent,
-      timeAgo: "Just now",
-      likes: 0,
-      comments: 0,
-      hasLiked: false,
-      hasBookmarked: false,
-    }
-
-    setPosts([newPost, ...posts])
-    setPostContent("")
-  }
-
-  // const handleLike = (postId: number) => {
-  //   setPosts(
-  //     posts.map((post) => {
-  //       if (post.id === postId) {
-  //         return {
-  //           ...post,
-  //           likes: post.hasLiked ? post.likes - 1 : post.likes + 1,
-  //           hasLiked: !post.hasLiked,
-  //         }
-  //       }
-  //       return post
-  //     }),
-  //   )
-  // }
-
-  // const handleBookmark = (postId: number) => {
-  //   setPosts(
-  //     posts.map((post) => {
-  //       if (post.id === postId) {
-  //         return {
-  //           ...post,
-  //           hasBookmarked: !post.hasBookmarked,
-  //         }
-  //       }
-  //       return post
-  //     }),
-  //   )
-  // }
-
   const isMobile = useIsMobile()
 
 
@@ -126,7 +20,7 @@ export default function Feed() {
         <div className="md:col-span-2 space-y-6">
           {/* Create Post Card */}
 
-          {isMobile && (
+          {/* {isMobile && (
             <></>
           ) ? (
             null
@@ -145,14 +39,14 @@ export default function Feed() {
                     className="mb-4"
                   />
                   <div className="flex justify-end">
-                    <Button onClick={handleCreatePost} disabled={!postContent.trim()} >
+                    <Button disabled={!postContent.trim()} >
                       Share
                     </Button>
                   </div>
                 </div>
               </div>
             </CardContent>
-          </Card>}
+          </Card>} */}
 
 
           {/* Arabic Verse */}
@@ -177,7 +71,7 @@ export default function Feed() {
           )}
 
           {/* Posts Feed */}
-         <PostFeed/>
+         <FeedCard/>
         </div>
         {isMobile ? (
               null
@@ -317,7 +211,6 @@ export default function Feed() {
 
       </div>
 
-      <CreatePostDialog isOpen={isCreatePostOpen} onOpenChange={setIsCreatePostOpen} />
     </div>
   )
 }

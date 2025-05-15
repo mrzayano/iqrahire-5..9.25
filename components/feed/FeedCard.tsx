@@ -16,7 +16,7 @@ import { Post } from "@/types/feed.post";
 
 
 
-export function PostFeed() {
+export function FeedCard() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(true);

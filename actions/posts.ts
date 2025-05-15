@@ -1,6 +1,6 @@
 "use server"
 // src/actions/posts.ts
-import { supabase } from "@/utils/supabase/client"
+import { supabase } from "@/utils/supabase/server"
 
 export async function createPost({
   content,

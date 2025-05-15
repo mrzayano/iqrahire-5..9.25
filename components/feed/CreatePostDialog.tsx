@@ -157,7 +157,7 @@ export function CreatePostDialog({
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
               <MapPin className="mr-1 h-3 w-3" />
-              <span>Kuala Lumpur, Malaysia</span>
+              <span>{String(user?.publicMetadata?.location || "")}</span>
             </div>
           </div>
         </div>

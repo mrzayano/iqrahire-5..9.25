@@ -1,5 +1,5 @@
 "use server";
-import { supabase } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/server";
 import { auth } from "@clerk/nextjs/server";
 
 
