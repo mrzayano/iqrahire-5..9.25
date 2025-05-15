@@ -2,7 +2,7 @@
 
 import { supabase } from "@/utils/supabase/server"
 import { transformJobData } from "./jobs"
-import type { FilterState, Salary } from "@/types/job"
+import type { FilterState } from "@/types/job"
 
 /**
  * Get unique filter options for all filter categories
@@ -193,10 +193,9 @@ if (
         filters.selectedSkills.length === 0 || filters.selectedSkills.some((skill) => job.skills.includes(skill))
 
       // Salary range filter
-     const matchesSalary = isSalaryInRange(job.salary, filters.salaryRange)
+      // const matchesSalary = isSalaryInRange(job.salary, filters.salaryRange)
 
-
-      return matchesSearch && matchesSkills && matchesSalary
+      return matchesSearch && matchesSkills 
     })
   } catch (error) {
     console.error("Unexpected error fetching filtered jobs:", error)
@@ -207,14 +206,13 @@ if (
 /**
  * Helper function to check if a job's salary is within range
  */
-function isSalaryInRange(salary: Salary | null, range: [number, number]): boolean {
-  if (!salary) return true // no salary info, treat as match
+// function isSalaryInRange(salary: string, range: [number, number]): boolean {
+//   const salaryMatch = salary.match(/\$(\d+)k\s*-\s*\$(\d+)k/)
+//   if (!salaryMatch) return true
 
-  const from = salary.from ?? 0
-  const to = salary.to ?? from
+//   const minSalary = Number.parseInt(salaryMatch[1])
+//   const maxSalary = Number.parseInt(salaryMatch[2])
 
-  // Check if salary range overlaps with filter range
-  return to >= range[0] && from <= range[1]
-}
-
+//   return maxSalary >= range[0] && minSalary <= range[1]
+// }
  
