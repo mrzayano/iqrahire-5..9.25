@@ -17,7 +17,7 @@ export const JobTabs = ({
   appliedJobs,
   acceptedJobs,
   rejectedJobs,
-  isLoading = false,
+  isLoading = false,  
   userId,
 }: EnhancedJobTabsProps) => {
   const isMobile = useIsMobile()
