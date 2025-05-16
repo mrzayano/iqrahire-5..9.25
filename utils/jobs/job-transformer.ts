@@ -36,5 +36,6 @@ export const transformJobData = async (job: any): Promise<Job> => {
     view_count: job.view_count,
     apply_count: job.apply_count,
     is_published: job.is_published,
+    company_logo: ""
   }
 }
