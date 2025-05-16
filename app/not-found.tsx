@@ -27,7 +27,7 @@ export default function NotFound() {
         <div className="space-y-4">
           <Button asChild size="lg" className="w-full">
             {isSignedIn? (
-              <Link href="/feed">Return Feed</Link>
+              <Link href="/jobs">Go to Jobs</Link>
             ):(
               <Link href="/">Return Home</Link>
 

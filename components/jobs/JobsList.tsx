@@ -198,9 +198,9 @@ const router = useRouter();
               <div className="flex gap-3">
                 {/* Company Logo */}
                 <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0 bg-primary/5 border">
-                  {job?.logoUrl ? (
+                  {job?.company_logo ? (
                     <Image
-                      src={job?.logoUrl || "/placeholder.svg"}
+                      src={job?.company_logo || "/placeholder.svg"}
                       alt={`${job.company} logo`}
                       className="h-full w-full object-cover"
                       onError={(e) => {

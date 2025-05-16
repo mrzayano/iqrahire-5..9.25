@@ -161,12 +161,12 @@ export default function Page() {
               <motion.div
                 initial="hidden"
                 animate="visible"
-                variants={fadeIn}
+                variants={fadeIn}Q
                 transition={{ duration: 0.5 }}
                 className="max-w-xl"
               >
                 <Badge className="mb-4 bg-sky-100 text-primary hover:bg-sky-100 px-3 py-1">
-                  INDIA'S #1 JOB PLATFORM
+                  INDIA&apos;S #1 JOB PLATFORM
                 </Badge>
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
                   Your job search{" "}
@@ -1092,8 +1092,8 @@ export default function Page() {
                   </div>
                 </div>
                 <p className="text-white/90">
-                  "I found my dream job within a week of using Apna! The platform is so intuitive and the job matching
-                  is spot on. I've recommended it to all my friends who are looking for new opportunities."
+                  &quot;I found my dream job within a week of using Apna! The platform is so intuitive and the job matching
+                  is spot on. I&apos;ve recommended it to all my friends who are looking for new opportunities.&quot;
                 </p>
               </motion.div>
 
@@ -1120,8 +1120,8 @@ export default function Page() {
                   </div>
                 </div>
                 <p className="text-white/90">
-                  "As a fresher, I was struggling to find good opportunities. Apna not only helped me find a job but
-                  also provided resources to improve my skills. Now I'm working at a top tech company!"
+                  &quot;As a fresher, I was struggling to find good opportunities. Apna not only helped me find a job but
+                  also provided resources to improve my skills. Now I&apos;m working at a top tech company!&quot;
                 </p>
               </motion.div>
 
@@ -1148,8 +1148,8 @@ export default function Page() {
                   </div>
                 </div>
                 <p className="text-white/90">
-                  "The remote job options on Apna are amazing! As a working mom, I needed flexibility, and Apna helped
-                  me find the perfect work-from-home opportunity that balances my career and family."
+                  &quot;The remote job options on Apna are amazing! As a working mom, I needed flexibility, and Apna helped
+                  me find the perfect work-from-home opportunity that balances my career and family.&quot;
                 </p>
               </motion.div>
             </div>
@@ -1466,7 +1466,7 @@ export default function Page() {
                 </span>
               </Link>
               <p className="text-gray-400 mb-6 max-w-md">
-                India's largest platform for job seekers and employers. Find jobs, build your network, and advance your
+                India&apos;s largest platform for job seekers and employers. Find jobs, build your network, and advance your
                 career.
               </p>
               <div className="flex space-x-4">

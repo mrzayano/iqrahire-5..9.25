@@ -1,8 +1,8 @@
 "use server"
 
 import { supabase } from "@/utils/supabase/server"
-import { transformJobData } from "./jobs"
 import type { FilterState } from "@/types/job"
+import { transformJobData } from "@/utils/jobs/job-transformer"
 
 /**
  * Get unique filter options for all filter categories

@@ -4,8 +4,8 @@ export interface JobLocation {
 }
 
 export type Salary = {
-  from?: number
-  to?: number
+  from?: string
+  to?: string
   currency: string
   period: "yearly" | "monthly" | "weekly" | "hourly"
 }
@@ -37,14 +37,14 @@ export interface Job {
   view_count: number
   apply_count: number
   is_published: boolean
-
+  company_logo: string
   // These properties are not in the original data but used in the UI
   // They will be added by the adapter function
   isSaved?: boolean
   status?: "Applied" | "Interviewed" | "Accepted" | "Rejected"
   postedDays?: number
   appliedDate?: string
-} 
+}
 
 export interface FilterState {
   searchQuery: string
