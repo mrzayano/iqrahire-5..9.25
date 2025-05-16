@@ -4,7 +4,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function fetchPosts() {
   const { userId } = await auth();
-  if (!userId) {
+  if (!userId) { 
     throw new Error("User not authenticated");
   }
   // console.log("user", user?.id);
