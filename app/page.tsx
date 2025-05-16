@@ -161,7 +161,7 @@ export default function Page() {
               <motion.div
                 initial="hidden"
                 animate="visible"
-                variants={fadeIn}Q
+                variants={fadeIn}
                 transition={{ duration: 0.5 }}
                 className="max-w-xl"
               >
