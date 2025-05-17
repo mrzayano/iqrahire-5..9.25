@@ -53,8 +53,10 @@ export default function Page() {
 
   // Parallax effects
   const heroImageY = useTransform(scrollY, [0, 500], [0, 100])
-  const statsOpacity = useTransform(scrollY, [100, 300], [0, 1])
+  // const statsOpacity = useTransform(scrollY, [100, 300], [0, 1])
   const statsY = useTransform(scrollY, [300, 600], [50, 0])
+  const statsOpacity = useTransform(scrollY, [0, 0], [0, 1])
+
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -526,7 +528,7 @@ export default function Page() {
                     alt="Person using IqraHire app"
                     width={500}
                     height={600}
-                    className="relative z-10 mx-auto top-10"
+                    className="relative z-10 mx-auto top-10 3xl:top-30"
                   />
                   {/* Floating AI Match */}
                   <motion.div
@@ -568,7 +570,7 @@ export default function Page() {
 
           {/* Stats Section */}
           <motion.div style={{ opacity: statsOpacity, y: statsY }} className="container mx-auto px-4 mb-16 z-10">
-            <Card className="bg-white rounded-2xl shadow-xl p-6 md:p-8 backdrop-blur-sm">
+            <Card className="bg-white rounded-2xl shadow-xl p-6 md:p-8 backdrop-blur-sm 3xl:relative 3xl:bottom-15">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
