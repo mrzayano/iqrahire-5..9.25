@@ -1014,7 +1014,7 @@ export default function Page() {
                           <div className="flex items-start">
                             <div className="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center mr-4 overflow-hidden">
                               <Image
-                                src="/images/swiggy.webp"
+                                src="/images/ic-swiggy.webp"
                                 alt="Swiggy"
                                 width={40}
                                 height={40}
