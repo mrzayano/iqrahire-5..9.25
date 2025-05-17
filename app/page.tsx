@@ -33,13 +33,16 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { motion, useAnimation, useScroll, useTransform } from "framer-motion"
 import { toast } from "sonner"
+import { useUser } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 
 export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState("all")
   const [scrolled, setScrolled] = useState(false)
   const { scrollY } = useScroll()
-
+  const { isSignedIn } = useUser();
+  const router = useRouter();
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
@@ -50,7 +53,7 @@ export default function Page() {
 
   // Parallax effects
   const heroImageY = useTransform(scrollY, [0, 500], [0, 100])
-  const statsOpacity = useTransform(scrollY, [300, 600], [0, 1])
+  const statsOpacity = useTransform(scrollY, [100, 300], [0, 1])
   const statsY = useTransform(scrollY, [300, 600], [50, 0])
 
   const handleSubscribe = (e: React.FormEvent) => {
@@ -242,7 +245,7 @@ export default function Page() {
   }
   const slideIn = {
     hidden: { x: -60, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { type: "spring"} },
+    visible: { x: 0, opacity: 1, transition: { type: "spring" } },
   }
 
   const controls1 = useAnimation();
@@ -315,15 +318,29 @@ export default function Page() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              <Link href="/employer" className="text-gray-600 hover:text-primary-600 transition-colors">
-                For Employers
-              </Link>
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
-                Login
-              </Button>
-              <Button className=" bg-primary hover:bg-primary/90 text-white">
-                Register
-              </Button>
+                {isSignedIn ? (
+                  <Button
+                    className="bg-primary text-white flex-1"
+                    onClick={() => router.push('/jobs')}
+                  >
+                    Go to Jobs
+                  </Button>
+                ) : (
+                <>
+                  <Button 
+                  onClick={()=> router.push('/sign-in')}
+                  variant="outline" className="border-primary text-primary hover:bg-primary/5">
+                    Login
+                  </Button>
+                  <Button 
+                   onClick={()=> router.push('/sign-up')}
+                  className="bg-primary hover:bg-primary/90 text-white">
+                    Register
+                  </Button>
+                </>
+                )}
+
+              
             </div>
 
             <button className="md:hidden text-gray-700" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -350,16 +367,30 @@ export default function Page() {
               <Link href="/" className="text-gray-700 hover:text-primary-600 transition-colors">
                 Courses
               </Link>
-              <Link href="/employer" className="text-gray-600 hover:text-primary-600 transition-colors">
-                For Employers
-              </Link>
+
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary/5 flex-1">
-                  Login
-                </Button>
-                <Button className="bg-gradient-to-r from-primary to-darkBlue-600 hover:from-primary/90 hover:to-darkBlue-700 text-white flex-1">
-                  Register
-                </Button>
+                {isSignedIn ? (
+                  <Button
+                    className="bg-primary text-white flex-1"
+                    onClick={() => router.push('/jobs')}
+                  >
+                    Go to Jobs
+                  </Button>
+                ) : (
+                <>
+                  <Button 
+                  onClick={()=> router.push('/sign-in')}
+                  variant="outline" className="border-primary text-primary hover:bg-primary/5 flex-1">
+                    Login
+                  </Button>
+                  <Button 
+                   onClick={()=> router.push('/sign-up')}
+                  className="bg-primary text-white flex-1">
+                    Register
+                  </Button>
+                </>
+                )}
+
               </div>
             </nav>
           </div>
@@ -495,7 +526,7 @@ export default function Page() {
                     alt="Person using IqraHire app"
                     width={500}
                     height={600}
-                    className="relative z-10 mx-auto"
+                    className="relative z-10 mx-auto top-10"
                   />
                   {/* Floating AI Match */}
                   <motion.div
@@ -608,7 +639,7 @@ export default function Page() {
               >
                 <div className="h-48 bg-primary/5 relative">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <FileText className="h-20 w-20 text-primary/30" />
+                    <FileText className="h-20 w-20 text-primary-300" />
                   </div>
                 </div>
                 <div className="p-6">
@@ -645,7 +676,7 @@ export default function Page() {
               >
                 <div className="h-48 bg-secondary/5 relative">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Video className="h-20 w-20 text-secondary/30" />
+                    <Video className="h-20 w-20 text-secondary-300" />
                   </div>
                 </div>
                 <div className="p-6">
@@ -682,7 +713,7 @@ export default function Page() {
               >
                 <div className="h-48 bg-primary/5 relative">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <BookOpen className="h-20 w-20 text-primary/30" />
+                    <BookOpen className="h-20 w-20 text-primary-300" />
                   </div>
                 </div>
                 <div className="p-6">
@@ -977,121 +1008,121 @@ export default function Page() {
 
                   {/* Job Card 3 */}
                   <motion.div variants={slideIn}>
-                     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-start">
-                          <div className="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center mr-4 overflow-hidden">
-                            <Image
-                              src="/images/swiggy.webp"
-                              alt="Swiggy"
-                              width={40}
-                              height={40}
-                              className="w-10 h-10 object-contain"
-                            />
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-start">
+                            <div className="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center mr-4 overflow-hidden">
+                              <Image
+                                src="/images/swiggy.webp"
+                                alt="Swiggy"
+                                width={40}
+                                height={40}
+                                className="w-10 h-10 object-contain"
+                              />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold text-gray-900">Operations Manager</h3>
+                              <p className="text-gray-600 text-sm">Swiggy</p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-gray-900">Operations Manager</h3>
-                            <p className="text-gray-600 text-sm">Swiggy</p>
+                          <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">Urgent</Badge>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <Badge variant="outline" className="text-gray-600">
+                            Full-time
+                          </Badge>
+                          <Badge variant="outline" className="text-gray-600">
+                            On-site
+                          </Badge>
+                          <Badge variant="outline" className="text-gray-600">
+                            2-4 yrs
+                          </Badge>
+                        </div>
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                            <span>Mumbai, India</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Briefcase className="h-4 w-4 mr-2 text-gray-400" />
+                            <span>₹8-12 LPA</span>
                           </div>
                         </div>
-                        <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">Urgent</Badge>
-                      </div>
 
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge variant="outline" className="text-gray-600">
-                          Full-time
-                        </Badge>
-                        <Badge variant="outline" className="text-gray-600">
-                          On-site
-                        </Badge>
-                        <Badge variant="outline" className="text-gray-600">
-                          2-4 yrs
-                        </Badge>
-                      </div>
-
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                          <span>Mumbai, India</span>
+                        <div className="flex justify-between items-center mt-6">
+                          <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
+                            Apply Now
+                          </Button>
+                          <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
+                            Save <Bell className="ml-1 h-4 w-4" />
+                          </Button>
                         </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Briefcase className="h-4 w-4 mr-2 text-gray-400" />
-                          <span>₹8-12 LPA</span>
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-6">
-                        <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
-                          Apply Now
-                        </Button>
-                        <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                          Save <Bell className="ml-1 h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
                   </motion.div>
-                 
+
 
                   {/* Job Card 4 */}
                   <motion.div variants={slideIn}>
-                     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-start">
-                          <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mr-4 overflow-hidden">
-                            <Image
-                              src="/images/bajaj.webp"
-                              alt="Bajaj Allianz"
-                              width={40}
-                              height={40}
-                              className="w-10 h-10 object-contain"
-                            />
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-start">
+                            <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mr-4 overflow-hidden">
+                              <Image
+                                src="/images/bajaj.webp"
+                                alt="Bajaj Allianz"
+                                width={40}
+                                height={40}
+                                className="w-10 h-10 object-contain"
+                              />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold text-gray-900">Financial Advisor</h3>
+                              <p className="text-gray-600 text-sm">Bajaj Allianz Life Insurance</p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-gray-900">Financial Advisor</h3>
-                            <p className="text-gray-600 text-sm">Bajaj Allianz Life Insurance</p>
+                          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Remote</Badge>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <Badge variant="outline" className="text-gray-600">
+                            Full-time
+                          </Badge>
+                          <Badge variant="outline" className="text-gray-600">
+                            Remote
+                          </Badge>
+                          <Badge variant="outline" className="text-gray-600">
+                            1-3 yrs
+                          </Badge>
+                        </div>
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                            <span>Pan India (Remote)</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Briefcase className="h-4 w-4 mr-2 text-gray-400" />
+                            <span>₹5-8 LPA + Incentives</span>
                           </div>
                         </div>
-                        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Remote</Badge>
-                      </div>
 
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge variant="outline" className="text-gray-600">
-                          Full-time
-                        </Badge>
-                        <Badge variant="outline" className="text-gray-600">
-                          Remote
-                        </Badge>
-                        <Badge variant="outline" className="text-gray-600">
-                          1-3 yrs
-                        </Badge>
-                      </div>
-
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                          <span>Pan India (Remote)</span>
+                        <div className="flex justify-between items-center mt-6">
+                          <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
+                            Apply Now
+                          </Button>
+                          <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
+                            Save <Bell className="ml-1 h-4 w-4" />
+                          </Button>
                         </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Briefcase className="h-4 w-4 mr-2 text-gray-400" />
-                          <span>₹5-8 LPA + Incentives</span>
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-6">
-                        <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
-                          Apply Now
-                        </Button>
-                        <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                          Save <Bell className="ml-1 h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
                   </motion.div>
-                 
+
                 </motion.div>
 
                 <div className="mt-8 text-center">
