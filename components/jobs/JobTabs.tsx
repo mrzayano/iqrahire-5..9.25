@@ -50,6 +50,7 @@ export const JobTabs = ({
       <TabsContent value="applied">
         <JobsList jobs={appliedJobs} isLoading={isLoading} userId={userId} />
       </TabsContent>
+      
      
 
       {/* Mobile-only bottom navigation */}
