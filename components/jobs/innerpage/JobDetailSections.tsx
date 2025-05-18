@@ -52,7 +52,7 @@ const JobDetailSections = ({ job, isSaved, onSave, onShare, onApply }: Props) =>
             </div>
             <div className='flex gap-2 mt-2 flex-wrap'>
               {job.skills.map(skill => (
-                <Badge key={skill} variant='secondary'>{skill}</Badge>
+                <Badge key={skill} variant='outline' className="bg-primary-foreground">{skill}</Badge>
               ))}
             </div>
           </div>

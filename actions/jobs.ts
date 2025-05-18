@@ -46,7 +46,7 @@ export async function getAllJobs(): Promise<Job[]> {
  */
 export async function getJobById(id: number): Promise<Job | null> {
   try {
-
+ 
     const { data, error } = await supabase.from("jobs").select("*").eq("id", id).single()
 
     if (error) {

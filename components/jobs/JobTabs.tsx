@@ -3,7 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { JobsList } from "@/components/jobs/JobsList"
-import { Briefcase, Clock, CheckCircle, XCircle } from "lucide-react"
+import { Briefcase, Clock, } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type { JobTabsProps } from "@/types/job"
 
@@ -15,8 +15,6 @@ interface EnhancedJobTabsProps extends JobTabsProps {
 export const JobTabs = ({
   allJobs,
   appliedJobs,
-  acceptedJobs,
-  rejectedJobs,
   isLoading = false,  
   userId,
 }: EnhancedJobTabsProps) => {
@@ -41,20 +39,7 @@ export const JobTabs = ({
               {appliedJobs.length}
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="accepted" className="px-4">
-            <CheckCircle className="h-4 w-4 mr-2" />
-            Accepted
-            <Badge variant="secondary" className="ml-2 bg-muted">
-              {acceptedJobs.length}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="rejected" className="px-4">
-            <XCircle className="h-4 w-4 mr-2" />
-            Rejected
-            <Badge variant="secondary" className="ml-2 bg-muted">
-              {rejectedJobs.length}
-            </Badge>
-          </TabsTrigger>
+          
         </TabsList>
       ) : null}
 
@@ -65,12 +50,7 @@ export const JobTabs = ({
       <TabsContent value="applied">
         <JobsList jobs={appliedJobs} isLoading={isLoading} userId={userId} />
       </TabsContent>
-      <TabsContent value="accepted">
-        <JobsList jobs={acceptedJobs} isLoading={isLoading} userId={userId} />
-      </TabsContent>
-      <TabsContent value="rejected">
-        <JobsList jobs={rejectedJobs} isLoading={isLoading} userId={userId} />
-      </TabsContent>
+     
 
       {/* Mobile-only bottom navigation */}
       {isMobile ? (
@@ -90,20 +70,8 @@ export const JobTabs = ({
                 {appliedJobs.length}
               </Badge>
             </TabsTrigger>
-            <TabsTrigger value="accepted" className="flex-1 flex-col pt-2 pb-1 px-2 h-auto rounded-md">
-              <CheckCircle className="h-5 w-5 mb-1" />
-              <span className="text-xs">Accepted</span>
-              <Badge variant="secondary" className="ml-0 mt-1 text-xs bg-muted">
-                {acceptedJobs.length}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value="rejected" className="flex-1 flex-col pt-2 pb-1 px-2 h-auto rounded-md">
-              <XCircle className="h-5 w-5 mb-1" />
-              <span className="text-xs">Rejected</span>
-              <Badge variant="secondary" className="ml-0 mt-1 text-xs bg-muted">
-                {rejectedJobs.length}
-              </Badge>
-            </TabsTrigger>
+            
+            
           </TabsList>
         </div>
       ) : null}

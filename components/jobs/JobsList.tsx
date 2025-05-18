@@ -19,6 +19,7 @@ import {
   Bookmark,
   BookmarkCheck,
   Building,
+  CheckSquare,
 } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type { Job, JobsListProps } from "@/types/job"
@@ -29,11 +30,14 @@ interface EnhancedJobsListProps extends JobsListProps {
   userId?: string
 }
 
-export const JobsList = ({ jobs, isLoading = false }: EnhancedJobsListProps) => {
+export const JobsList = ({ jobs, isLoading = false,  }: EnhancedJobsListProps) => {
   const [savingJob, setSavingJob] = useState<number | null>(null)
   const [applyingJob, setApplyingJob] = useState<number | null>(null)
   const [expandedJobId, setExpandedJobId] = useState<number | null>(null)
   const isMobile = useIsMobile()
+
+  // Check if these are applied jobs by looking at the structure
+  const isAppliedJobsList = jobs && jobs.length > 0 && "status" in jobs[0] && jobs[0].status === "Applied"
 
   const handleJobSave = useCallback(async (job: Job) => {
     setSavingJob(job.id)
@@ -84,7 +88,7 @@ export const JobsList = ({ jobs, isLoading = false }: EnhancedJobsListProps) => 
     return <JobSkeletons />
   }
 
-  if (jobs.length === 0) {
+  if (!jobs || jobs.length === 0) {
     return <EmptyJobsState />
   }
 
@@ -103,6 +107,7 @@ export const JobsList = ({ jobs, isLoading = false }: EnhancedJobsListProps) => 
             onSave={handleJobSave}
             onApply={handleJobApply}
             onShare={handleShareJob}
+            isAppliedJob={isAppliedJobsList}
           />
         ))}
       </AnimatePresence>
@@ -165,6 +170,7 @@ interface JobCardProps {
   onSave: (job: Job) => void
   onApply: (job: Job) => void
   onShare: (job: Job) => void
+  isAppliedJob?: boolean
 }
 
 const JobCard = ({
@@ -175,10 +181,15 @@ const JobCard = ({
   onToggleExpand,
   onSave,
   onShare,
+  isAppliedJob = false,
 }: JobCardProps) => {
   const jobSaved = job.isSaved
   const isRemote = job.work_mode === "remote"
-const router = useRouter();
+  const router = useRouter()
+
+  // Format the applied date if it exists
+  const appliedDate = job.created_at ? new Date(job.created_at).toLocaleDateString() : null
+
   return (
     <motion.div
       key={job.id}
@@ -189,10 +200,21 @@ const router = useRouter();
       layout
     >
       <Card
-        className="overflow-hidden hover:border-l-primary/50"
+        className={`overflow-hidden ${
+          isAppliedJob
+            ? "border-l-1 border-l-green-500 bg-green-50/30 hover:border-l-green-600"
+            : "hover:border-l-primary/50"
+        }`}
         onClick={isMobile ? () => onToggleExpand(job.id) : undefined}
       >
-        <CardContent className={`p-4 md:p-6 ${isMobile ? "cursor-pointer" : ""}`}>
+        <CardContent className={` ${isMobile ? "cursor-pointer" : ""}`}>
+          {isAppliedJob && (
+            <div className="flex items-center gap-2 mb-3 text-green-600 bg-green-100/50 py-1.5 px-3 rounded-md w-fit">
+              <CheckSquare className="h-4 w-4" />
+              <span className="text-sm font-medium">Applied {appliedDate || "recently"}</span>
+            </div>
+          )}
+
           <div className="flex flex-col md:flex-row justify-between gap-6">
             <div className="space-y-3 flex-1">
               <div className="flex gap-3">
@@ -201,7 +223,7 @@ const router = useRouter();
                   {job?.company_logo ? (
                     <Image
                       src={job?.company_logo || "/placeholder.svg"}
-                      alt={`${job.company} logo`}
+                      alt={`${job.title} logo`}
                       className="h-full w-full object-cover"
                       onError={(e) => {
                         e.currentTarget.src = `/placeholder.svg?height=48&width=48&text=${job.company.charAt(0)}`
@@ -216,15 +238,21 @@ const router = useRouter();
 
                 <div>
                   <div className="flex items-center gap-3 flex-wrap mb-1.5 cursor-pointer">
-                    <h3 className="text-lg md:text-xl font-bold"
-                    onClick={()=> router.push(`/jobs/${job.slug}`)}
-                    >{job.title}</h3>
+                    <h3 className="text-lg md:text-xl font-bold" onClick={() => router.push(`/jobs/${job.slug}`)}>
+                      {job.title}
+                    </h3>
                     {isRemote && (
                       <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
                         Remote
                       </Badge>
                     )}
-                    {job.status && <StatusBadge status={job.status} />}
+                    {job.status && !isAppliedJob && <StatusBadge status={job.status} />}
+                    {isAppliedJob && (
+                      <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Applied
+                      </Badge>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-3 flex-wrap">
@@ -243,7 +271,9 @@ const router = useRouter();
                     <div className="flex items-center text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
                       <span>
-                        Posted {job.postedDays} {job.postedDays === 1 ? "day" : "days"} ago
+                        {isAppliedJob
+                          ? `Applied on ${appliedDate || "recently"}`
+                          : `Posted ${job.postedDays} ${job.postedDays === 1 ? "day" : "days"} ago`}
                       </span>
                     </div>
                   </div>
@@ -253,7 +283,15 @@ const router = useRouter();
               {/* Skills tags - show fewer on mobile unless expanded */}
               <div className="flex flex-wrap gap-1.5 mt-1">
                 {job.skills.slice(0, isMobile && !isExpanded ? 2 : job.skills.length).map((skill, index) => (
-                  <Badge key={index} variant="secondary" className="bg-primary/10 text-primary border-none text-xs">
+                  <Badge
+                    key={index}
+                    variant="secondary"
+                    className={
+                      isAppliedJob
+                        ? "bg-green-100 text-green-700 border-none text-xs"
+                        : "bg-primary/10 text-primary border-none text-xs"
+                    }
+                  >
                     {skill}
                   </Badge>
                 ))}
@@ -275,7 +313,7 @@ const router = useRouter();
                   <p className="line-clamp-3 text-sm mt-2 text-muted-foreground">{job.description}</p>
 
                   {/* Only show application date on desktop or when expanded */}
-                  {job.appliedDate && (
+                  {job.appliedDate && !isAppliedJob && (
                     <div className="text-xs mt-3 py-1.5 px-3 bg-muted/50 rounded-md inline-block">
                       Applied {job.appliedDate}
                     </div>
@@ -297,50 +335,52 @@ const router = useRouter();
               <div
                 className={`flex gap-2 w-full md:w-auto mt-2 ${!isMobile || isExpanded ? "flex" : "hidden md:flex"}`}
               >
-              
                 <div className="flex gap-1">
                   <Button
-                  onClick={() => router.push(`/jobs/${job.slug}`)}
+                    onClick={() => router.push(`/jobs/${job.slug}`)}
+                    variant={isAppliedJob ? "outline" : "default"}
                   >
                     View
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onSave(job)
-                    }}
-                    className={jobSaved ? "text-primary" : ""}
-                    disabled={savingJob === job.id}
-                  >
-                    {savingJob === job.id ? (
-                      <svg
-                        className="animate-spin h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : jobSaved ? (
-                      <BookmarkCheck className="h-4 w-4" />
-                    ) : (
-                      <Bookmark className="h-4 w-4" />
-                    )}
-                  </Button>
+                  {!isAppliedJob && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onSave(job)
+                      }}
+                      className={jobSaved ? "text-primary" : ""}
+                      disabled={savingJob === job.id}
+                    >
+                      {savingJob === job.id ? (
+                        <svg
+                          className="animate-spin h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      ) : jobSaved ? (
+                        <BookmarkCheck className="h-4 w-4" />
+                      ) : (
+                        <Bookmark className="h-4 w-4" />
+                      )}
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="icon"
@@ -364,7 +404,6 @@ const router = useRouter();
           )}
         </CardContent>
       </Card>
-      
     </motion.div>
   )
 }

@@ -65,9 +65,6 @@ export interface JobTabsProps {
   allJobs: Job[]
   savedJobs: Job[]
   appliedJobs: Job[]
-  interviewedJobs: Job[]
-  acceptedJobs: Job[]
-  rejectedJobs: Job[]
 }
 
 export interface JobsListProps {

@@ -10,7 +10,7 @@
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --breakpoint-3xl: 100rem;
-  --color-primary: hsl(var(--primary));
+  --color-primary: hsl(182, 100%, 25%);
   --color-primary-foreground: hsl(var(--primary-foreground));
   --color-primary-300: #a9d2d3;
   --color-primary-600: hsl(var(--primary));
@@ -190,7 +190,6 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 182, 100%, 25%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96%;

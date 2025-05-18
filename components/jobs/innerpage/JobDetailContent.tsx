@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { Job } from "@/types/job"
 import JobDetailSections from "./JobDetailSections"
 import { useState } from "react"
-
+import { apply_jobs } from "@/actions/job_application"
 interface Props {
   job: Job
   isMobile: boolean
@@ -34,14 +34,20 @@ const JobDetailContent = ({ job, isMobile }: Props) => {
     }
   }
 
-  const handleApply = () => {
+  const handleApply = async () => {
     if (job.applicationMethod === "Easy Apply") {
-      router.push(`/apply/${job.slug}`)
+      const res = await apply_jobs(job.id)
+      if (res.success) {
+        toast.success("Applied successfully!")
+      } else {
+        toast.error(res.message || "Failed to apply for the job.")
+      }
     } else {
       toast.info("Redirecting...")
       window.open(job.applicationUrl || "", "_blank")
     }
   }
+
 
   return (
     <div className='container max-w-4xl mx-auto px-4 py-8'>

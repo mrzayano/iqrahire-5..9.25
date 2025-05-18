@@ -15,6 +15,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import type { Job, FilterState } from "@/types/job"
 import { filterJobs } from "@/utils/jobs/job-utils"
 import { getFilteredJobs } from "@/actions/jobs-filter"
+import { GetAppliedJobByUser } from "@/actions/fetch_applied_jobs"
 
 interface JobsProps {
   initialJobs: Job[]
@@ -51,7 +52,7 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
   const [jobs] = useState<Job[]>(initialJobs)
   const [filteredJobs, setFilteredJobs] = useState<Job[]>(initialJobs)
   const [savedJobs] = useState<Job[]>([])
-  const [appliedJobs] = useState<Job[]>([])
+  const [appliedJobs, setAppliedJobs] = useState<Job[]>([])
   const [showMobileFilterSheet, setShowMobileFilterSheet] = useState(false)
   const mainContentRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
@@ -90,6 +91,20 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
 
     applyFilters()
   }, [filterState, jobs])
+
+  //fetch applied job by current user
+    useEffect(() => {
+    const appliedJob = async () => {
+      try {
+        const data = await GetAppliedJobByUser();
+        setAppliedJobs(data);
+      } catch (error) {
+        console.error("Failed to fetch applied jobs:", error)
+      }
+    };
+
+    appliedJob();
+  }, []);
 
   // Check if we have filters that are better handled by the server
   const hasActiveServerFilters = (filters: FilterState): boolean => {
@@ -224,10 +239,9 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
     )
   }, [filterState])
 
-  // Get accepted and rejected jobs from applied jobs
-  const acceptedJobs = useMemo(() => appliedJobs.filter((job) => job.status === "Accepted"), [appliedJobs])
-  const rejectedJobs = useMemo(() => appliedJobs.filter((job) => job.status === "Rejected"), [appliedJobs])
+  
 
+  
   return (
     <div className="container py-8 max-w-7xl mx-auto" ref={mainContentRef}>
       <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-6">
@@ -351,9 +365,6 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
               allJobs={filteredJobs}
               savedJobs={savedJobs}
               appliedJobs={appliedJobs}
-              interviewedJobs={[]}
-              acceptedJobs={acceptedJobs}
-              rejectedJobs={rejectedJobs}
               isLoading={isLoading}
               userId={userId}
             />
