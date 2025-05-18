@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
@@ -37,6 +37,18 @@ export default clerkMiddleware(async (auth, req) => {
   // Otherwise, let the request go through
 })
 
+export function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl
+
+  // Check if pathname contains uppercase letters
+  if (pathname !== pathname.toLowerCase()) {
+    const lowercaseURL = `${pathname.toLowerCase()}${search}`
+    return NextResponse.redirect(new URL(lowercaseURL, request.url))
+  }
+
+  return NextResponse.next()
+}
+
 export const config = {
   matcher: [
     // Apply to all public pages (except static assets)
@@ -44,5 +56,6 @@ export const config = {
     // Also always run for API routes under /api/*
     '/api/:path*',
     '/trpc/:path*',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)'
   ],
 }
