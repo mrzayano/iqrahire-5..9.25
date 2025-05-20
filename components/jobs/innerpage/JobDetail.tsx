@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { useIsMobile } from "@/hooks/use-mobile"
 import { Job } from "@/types/job"
 import { getJobBySlug } from "@/actions/get-job-by-slug"
 import JobDetailContent from "./JobDetailContent"
@@ -13,7 +12,6 @@ interface Props {
 }
 
 export const JobDetail = ({ slug }: Props) => {
-  const isMobile = useIsMobile()
   const [job, setJob] = useState<Job | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -39,5 +37,5 @@ export const JobDetail = ({ slug }: Props) => {
   if (isLoading) return <JobDetailSkeleton />
   if (!job) return <div className='text-center py-12'>Job not found</div>
 
-  return <JobDetailContent job={job} isMobile={isMobile} />
+  return <JobDetailContent job={job} />
 }

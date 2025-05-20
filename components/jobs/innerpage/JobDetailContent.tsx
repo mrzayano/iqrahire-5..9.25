@@ -9,10 +9,9 @@ import JobDetailSections from "./JobDetailSections"
 import { apply_jobs } from "@/actions/job_application"
 interface Props {
   job: Job
-  isMobile: boolean
 }
 
-const JobDetailContent = ({ job, isMobile }: Props) => {
+const JobDetailContent = ({ job }: Props) => {
   const router = useRouter()
 
 
@@ -52,7 +51,6 @@ const JobDetailContent = ({ job, isMobile }: Props) => {
 
       <JobDetailSections
         job={job}
-        isMobile={isMobile}
         onShare={handleShare}
         onApply={handleApply}
       />

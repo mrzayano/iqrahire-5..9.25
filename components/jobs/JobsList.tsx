@@ -11,7 +11,6 @@ import { toast } from "sonner"
 import {
   Briefcase,
   MapPin,
-  Calendar,
   Clock,
   CheckCircle,
   XCircle,
@@ -31,7 +30,6 @@ interface EnhancedJobsListProps extends JobsListProps {
 
 export const JobsList = ({ jobs: initialJobs, isLoading = false }: EnhancedJobsListProps) => {
   const [jobs, ] = useState(initialJobs)
-  const [expandedJobId, setExpandedJobId] = useState<number | null>(null)
   const isMobile = useIsMobile()
 
   // Check if these are applied jobs by looking at the structure
@@ -63,9 +61,7 @@ export const JobsList = ({ jobs: initialJobs, isLoading = false }: EnhancedJobsL
     }
   }, [])
 
-  const toggleJobExpansion = useCallback((jobId: number) => {
-    setExpandedJobId((prevId) => (prevId === jobId ? null : jobId))
-  }, [])
+
 
   if (isLoading) {
     return <JobSkeletons />
@@ -83,8 +79,6 @@ console.log(jobs, "ins");
             key={job.id}
             job={job}
             isMobile={isMobile}
-            isExpanded={expandedJobId === job.id}
-            onToggleExpand={toggleJobExpansion}
             onShare={handleShareJob}
             isAppliedJob={isAppliedJobsList}
           />
@@ -142,8 +136,6 @@ const EmptyJobsState = () => (
 interface JobCardProps {
   job: Job
   isMobile: boolean
-  isExpanded: boolean
-  onToggleExpand: (jobId: number) => void
   onShare: (job: Job) => void
   isAppliedJob?: boolean
 }
@@ -151,8 +143,6 @@ interface JobCardProps {
 const JobCard = ({
   job,
   isMobile,
-  isExpanded,
-  onToggleExpand,
   onShare,
   isAppliedJob = false,
 }: JobCardProps) => {
@@ -178,7 +168,7 @@ const JobCard = ({
             ? "border-l-1 border-l-green-500 bg-green-50/30 hover:border-l-green-600"
             : "hover:border-l-primary/50"
         }`}
-        onClick={isMobile ? () => onToggleExpand(job.id) : undefined}
+       
       >
         <CardContent className={` ${isMobile ? "cursor-pointer" : ""}`}>
           {isAppliedJob && (
@@ -188,161 +178,141 @@ const JobCard = ({
             </div>
           )}
 
-          <div className="flex flex-col md:flex-row justify-between gap-6">
-            <div className="space-y-3 flex-1">
-              <div className="flex gap-3">
-                {/* Company Logo */}
-                <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0 bg-primary/5 border">
-                  {job?.company_logo ? (
-                    <Image
-                      src={job?.company_logo || "/placeholder.svg"}
-                      alt={`${job.title} logo`}
-                      className="h-full w-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = `/placeholder.svg?height=48&width=48&text=${job.company.charAt(0)}`
-                      }}
-                    />
-                  ) : (
-                    <div className="h-full w-full flex items-center justify-center bg-primary/10 text-primary font-semibold uppercase">
-                      {job.title.charAt(0) + job.title.charAt(1)}
-                    </div>
-                  )}
-                </div>
+         <div className="flex flex-col md:flex-row justify-between gap-6">
+  <div className="space-y-3 flex-1">
+    <div className="flex gap-3">
+      {/* Company Logo */}
+      <div className="h-12 w-12 rounded-md overflow-hidden flex-shrink-0 bg-primary/5 border">
+        {job?.company_logo ? (
+          <Image
+            src={job.company_logo}
+            alt={`${job.title} logo`}
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = `/placeholder.svg?height=48&width=48&text=${job.company.charAt(0)}`
+            }}
+          />
+        ) : (
+          <div className="h-full w-full flex items-center justify-center bg-primary/10 text-primary font-semibold uppercase">
+            {job.title.charAt(0) + job.title.charAt(1)}
+          </div>
+        )}
+      </div>
 
-                <div>
-                  <div className="flex items-center gap-3 flex-wrap mb-1.5 cursor-pointer">
-                    <h3 className="text-lg md:text-xl font-bold" onClick={() => router.push(`/jobs/${job.slug}`)}>
-                      {job.title}
-                    </h3>
-                    {isRemote && (
-                      <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
-                        Remote
-                      </Badge>
-                    )}
-                    {job.status && !isAppliedJob && <StatusBadge status={job.status} />}
-                    {isAppliedJob && (
-                      <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Applied
-                      </Badge>
-                    )}
-                  </div>
+      <div>
+        <div className="flex items-center gap-3 flex-wrap mb-1.5 cursor-pointer">
+          <h3
+            className="text-lg md:text-xl font-bold"
+            onClick={() => router.push(`/jobs/${job.slug}`)}
+          >
+            {job.title}
+          </h3>
+          {isRemote && (
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
+              Remote
+            </Badge>
+          )}
+          {job.status && !isAppliedJob && <StatusBadge status={job.status} />}
+          {isAppliedJob && (
+            <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              Applied
+            </Badge>
+          )}
+        </div>
 
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="flex items-center text-muted-foreground">
-                      <Building className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-                      <span className="font-medium text-foreground/80">{job.company}</span>
-                    </div>
-
-                    <div className="flex items-center text-muted-foreground">
-                      <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-                      <span>
-                        {job.location.city}, {job.location.country}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center text-muted-foreground">
-                      <Calendar className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-                      <span>
-                        {isAppliedJob
-                          ? `Applied on ${appliedDate || "recently"}`
-                          : `Posted ${job.postedDays} ${job.postedDays === 1 ? "day" : "days"} ago`}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Skills tags - show fewer on mobile unless expanded */}
-              <div className="flex flex-wrap gap-1.5 mt-1">
-                {job.skills.slice(0, isMobile && !isExpanded ? 2 : job.skills.length).map((skill, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className={
-                      isAppliedJob
-                        ? "bg-green-100 text-green-700 border-none text-xs"
-                        : "bg-primary/10 text-primary border-none text-xs"
-                    }
-                  >
-                    {skill}
-                  </Badge>
-                ))}
-                {isMobile && !isExpanded && job.skills.length > 2 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{job.skills.length - 2} more
-                  </Badge>
-                )}
-              </div>
-
-              {/* Job description - only show on desktop or when expanded on mobile */}
-              {(!isMobile || isExpanded) && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden"
-                >
-                  <p className="line-clamp-3 text-sm mt-2 text-muted-foreground">{job.description}</p>
-
-                  {/* Only show application date on desktop or when expanded */}
-                  {job.appliedDate && !isAppliedJob && (
-                    <div className="text-xs mt-3 py-1.5 px-3 bg-muted/50 rounded-md inline-block">
-                      Applied {job.appliedDate}
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </div>
-
-            <div className="flex flex-col items-start md:items-end justify-between gap-2 md:gap-4 min-w-[140px]">
-              <div className="font-medium text-primary">
-                {job.salary
-                  ? `${job.salary.from ? job.salary.from.toLocaleString() : ""}${
-                      job.salary.to ? ` - ${job.salary.to.toLocaleString()}` : ""
-                    } ${job.salary.currency} / ${job.salary.period.charAt(0).toUpperCase() + job.salary.period.slice(1)}`
-                  : "Salary not specified"}
-              </div>
-
-              {/* Action buttons - always visible on desktop, visible when expanded on mobile */}
-              <div
-                className={`flex gap-2 w-full md:w-auto mt-2 ${!isMobile || isExpanded ? "flex" : "hidden md:flex"}`}
-              >
-                <div className="flex gap-1">
-                  {job.applied? (
-                      <Button className="bg-green-600 hover:bg-green-600"
-                  >
-                   <CheckCircle className="h-4 w-4 mr-1" /> Applied
-                  </Button>):
-                 ( <Button
-                    onClick={() => router.push(`/jobs/${job.slug}`)}
-                    variant={isAppliedJob ? "outline" : "default"}
-                  >
-                    View
-                  </Button>)}
-                  
-                 
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onShare(job)
-                    }}
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
+        <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
+          <div className="flex items-center">
+            <Building className="h-3.5 w-3.5 mr-1.5" />
+            <span className="font-medium text-foreground/80">{job.company}</span>
           </div>
 
+          <div className="flex items-center">
+            <MapPin className="h-3.5 w-3.5 mr-1.5" />
+            <span>
+              {job.location.city}, {job.location.country}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Skills and description hidden on mobile */}
+    {!isMobile && (
+      <>
+        <div className="flex flex-wrap gap-1.5 mt-1">
+          {job.skills.map((skill, index) => (
+            <Badge
+              key={index}
+              variant="secondary"
+              className="bg-primary/10 text-primary border-none text-xs"
+            >
+              {skill}
+            </Badge>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="overflow-hidden"
+        >
+          <p className="line-clamp-3 text-sm mt-2 text-muted-foreground">{job.description}</p>
+        </motion.div>
+      </>
+    )}
+  </div>
+
+  {/* Right Column */}
+  <div className="flex flex-col items-start md:items-end justify-between gap-2 md:gap-4 min-w-[140px]">
+    <div className="font-medium text-primary text-sm md:text-base">
+      {job.salary
+        ? `${job.salary.from ? job.salary.from.toLocaleString() : ""}${
+            job.salary.to ? ` - ${job.salary.to.toLocaleString()}` : ""
+          } ${job.salary.currency} / ${job.salary.period.charAt(0).toUpperCase() + job.salary.period.slice(1)}`
+        : "Salary not specified"}
+    </div>
+
+    {/* Action buttons */}
+    <div className={`flex gap-2 w-full md:w-auto`}>
+      <div className="flex gap-1">
+        {job.applied ? (
+          <Button className="bg-green-600 hover:bg-green-600">
+            <CheckCircle className="h-4 w-4 mr-1" /> Applied
+          </Button>
+        ) : (
+          <Button onClick={() => router.push(`/jobs/${job.slug}`)} variant={isAppliedJob ? "outline" : "default"}>
+            View
+          </Button>
+        )}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation()
+            onShare(job)
+          }}
+        >
+          <Share2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+
+    {/* Date - visible only on mobile at the bottom in small text */}
+    {isMobile && (
+      <div className="text-xs text-muted-foreground mt-2">
+        {isAppliedJob
+          ? `Applied on ${appliedDate || "recently"}`
+          : `Posted ${job.postedDays} ${job.postedDays === 1 ? "day" : "days"} ago`}
+      </div>
+    )}
+  </div>
+</div>
+
+
           {/* Mobile expand/collapse indicator */}
-          {isMobile && (
-            <div className="text-center mt-3 text-xs text-muted-foreground">
-              {isExpanded ? "Tap to collapse" : "Tap for details"}
-            </div>
-          )}
+         
         </CardContent>
       </Card>
     </motion.div>

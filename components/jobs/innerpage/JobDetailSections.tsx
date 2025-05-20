@@ -12,7 +12,6 @@ import { useEffect, useState } from "react"
 
 interface Props {
   job: Job
-  isMobile: boolean
   onShare: () => void
   onApply: () => void
 }
