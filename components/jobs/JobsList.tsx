@@ -50,7 +50,7 @@ export const JobsList = ({ jobs: initialJobs, isLoading = false }: EnhancedJobsL
         .share({
           title: `${job.title} at ${job.company}`,
           text: `Check out this job: ${job.title} at ${job.company}`,
-          url: window.location.href,
+          url: `${window.location.href}/${job.slug}`,
         })
         .catch((error) => {
           console.log("Error sharing", error)
@@ -58,7 +58,7 @@ export const JobsList = ({ jobs: initialJobs, isLoading = false }: EnhancedJobsL
         })
     } else {
       // Fallback for browsers that don't support the Web Share API
-      navigator.clipboard.writeText(window.location.href)
+      navigator.clipboard.writeText(`${window.location.href}/${job.slug}`)
       toast.success("Job link copied to clipboard")
     }
   }, [])
