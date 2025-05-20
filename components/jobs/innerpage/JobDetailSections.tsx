@@ -83,12 +83,15 @@ const JobDetailSections = ({ job, onShare, onApply }: Props) => {
 
         {/* Action buttons */}
         {/* Action buttons */}
-        <div className="flex flex-col xs:flex-row gap-2 mb-6">
+        <div className={cn("flex gap-2 mb-6", isMobile ? "flex-row" : "flex-col xs:flex-row")}>
           {job.applicationMethod === "Easy Apply" &&
             appliedJobs?.some((appliedJob) => appliedJob.job_id === job.id) ? (
             <Button
-              className="flex-1 bg-green-500 hover:bg-green-600 text-white cursor-not-allowed disabled:opacity-100"
-              size={isMobile ? "sm" : "default"}
+              className={cn(
+                "bg-green-500 hover:bg-green-600 text-white cursor-not-allowed disabled:opacity-100",
+                isMobile ? "flex-grow" : "flex-1"
+              )}
+              size={isMobile ? "lg" : "default"}
               disabled
             >
               <CheckCircle className="mr-1 h-4 w-4" />
@@ -96,8 +99,8 @@ const JobDetailSections = ({ job, onShare, onApply }: Props) => {
             </Button>
           ) : (
             <Button
-              className="flex-1"
-              size={isMobile ? "sm" : "default"}
+              className={cn(isMobile ? "flex-grow" : "flex-1")}
+              size={isMobile ? "lg" : "default"}
               onClick={onApply}
             >
               {job.applicationMethod === "Easy Apply" ? (
@@ -114,11 +117,12 @@ const JobDetailSections = ({ job, onShare, onApply }: Props) => {
             </Button>
           )}
 
-          <div className="flex gap-2">
+          <div className={cn("flex gap-2", isMobile ? "flex-grow" : "")}>
             <Button
               variant="outline"
-              size={isMobile ? "icon" : "default"}
+              size={isMobile ? "lg" : "default"}
               onClick={onShare}
+              className={isMobile ? "flex-grow" : ""}
             >
               {!isMobile && "Share"}
               <Share2 className={cn("h-4 w-4", !isMobile && "ml-1")} />

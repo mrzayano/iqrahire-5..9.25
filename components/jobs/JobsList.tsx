@@ -311,7 +311,6 @@ const JobCard = ({
 </div>
 
 
-          {/* Mobile expand/collapse indicator */}
          
         </CardContent>
       </Card>
