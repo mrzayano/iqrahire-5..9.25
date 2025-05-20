@@ -11,9 +11,9 @@ export type Salary = {
 }
 
 export interface Job {
-  applied: ReactNode
-  job: number
-  job_id: number
+  applied?: boolean
+  job?: number
+  job_id?: number
   id: number
   slug: string
   title: string

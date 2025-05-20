@@ -70,7 +70,6 @@ export const JobsList = ({ jobs: initialJobs, isLoading = false }: EnhancedJobsL
   if (!jobs || jobs.length === 0) {
     return <EmptyJobsState />
   }
-console.log(jobs, "ins");
   return (
     <div className="space-y-4">
       <AnimatePresence initial={false}>
