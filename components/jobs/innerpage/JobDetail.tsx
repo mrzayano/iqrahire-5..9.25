@@ -34,6 +34,7 @@ export const JobDetail = ({ slug }: Props) => {
 
     load()
   }, [slug])
+  
 
   if (isLoading) return <JobDetailSkeleton />
   if (!job) return <div className='text-center py-12'>Job not found</div>

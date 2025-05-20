@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 import { Job } from "@/types/job"
 import JobDetailSections from "./JobDetailSections"
-import { useState } from "react"
 import { apply_jobs } from "@/actions/job_application"
 interface Props {
   job: Job
@@ -15,12 +14,8 @@ interface Props {
 
 const JobDetailContent = ({ job, isMobile }: Props) => {
   const router = useRouter()
-  const [isSaved, setIsSaved] = useState(job.isSaved ?? false)
 
-  const handleSave = () => {
-    setIsSaved((prev) => !prev)
-    toast.success(!isSaved ? "Job saved!" : "Removed from saved")
-  }
+
 
   const handleShare = () => {
     if (navigator.share) {
@@ -58,8 +53,6 @@ const JobDetailContent = ({ job, isMobile }: Props) => {
       <JobDetailSections
         job={job}
         isMobile={isMobile}
-        isSaved={isSaved}
-        onSave={handleSave}
         onShare={handleShare}
         onApply={handleApply}
       />

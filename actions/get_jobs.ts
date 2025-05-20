@@ -4,6 +4,7 @@ import { supabase } from "@/utils/supabase/server";
 import { enhanceJobData } from "@/utils/jobs/job-utils"
 import type { Job } from "@/types/job"
 import { transformJobData } from "@/utils/jobs/job-transformer";
+import { auth } from "@clerk/nextjs/server";
 
 /**
  * Transform Supabase job data to match our application's Job type
@@ -27,11 +28,12 @@ export async function getAllJobs(): Promise<Job[]> {
       .eq("is_published", true)
       .order("created_at", { ascending: false })
 
+
     if (error) {
       console.error("Error fetching jobs:", error)
       return []
     }
- 
+
     // Transform and enhance the job data
     const transformedJobs = await Promise.all(data.map(transformJobData))
     return enhanceJobData(transformedJobs)
@@ -46,7 +48,7 @@ export async function getAllJobs(): Promise<Job[]> {
  */
 export async function getJobById(id: number): Promise<Job | null> {
   try {
- 
+
     const { data, error } = await supabase.from("jobs").select("*").eq("id", id).single()
 
     if (error) {
@@ -66,16 +68,28 @@ export async function getJobById(id: number): Promise<Job | null> {
 /**
  * Get user's saved jobs
  */
-export async function getSavedJobs(userId: string): Promise<Job[]> {
+export async function getSavedJobs(): Promise<Job[]> {
+
   try {
+    const { userId } = await auth()
+    console.log(userId, "haah");
 
     const { data, error } = await supabase
       .from("saved_jobs")
       .select(`
-        job_id,
-        jobs:job_id (*)
-      `)
+    job_id,
+    jobs (
+      id,
+      title,
+      location,
+      work_mode,
+      salary,
+      skills
+    )
+  `)
       .eq("user_id", userId)
+
+
 
     if (error) {
       console.error("Error fetching saved jobs:", error)

@@ -30,9 +30,9 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect()
   }
 
-  // 🚀 If onboarded, redirect from onboarding to feed
+  // 🚀 If onboarded, redirect from onboarding to jobs
   if (userId && isOnboardingRoute(req) && onboardingComplete) {
-    const redirectTo = url.searchParams.get('redirectTo') || '/feed'
+    const redirectTo = url.searchParams.get('redirectTo') || '/jobs'
     return NextResponse.redirect(new URL(redirectTo, req.url))
   }
 
@@ -40,6 +40,8 @@ export default clerkMiddleware(async (auth, req) => {
   if (userId && !onboardingComplete && !isOnboardingRoute(req)) {
     return NextResponse.redirect(new URL('/onboarding', req.url))
   }
+
+
 
   return NextResponse.next()
 })

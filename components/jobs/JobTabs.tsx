@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -15,7 +16,7 @@ interface EnhancedJobTabsProps extends JobTabsProps {
 export const JobTabs = ({
   allJobs,
   appliedJobs,
-  isLoading = false,  
+  isLoading = false,
   userId,
 }: EnhancedJobTabsProps) => {
   const isMobile = useIsMobile()
@@ -39,7 +40,8 @@ export const JobTabs = ({
               {appliedJobs.length}
             </Badge>
           </TabsTrigger>
-          
+       
+
         </TabsList>
       ) : null}
 
@@ -50,8 +52,9 @@ export const JobTabs = ({
       <TabsContent value="applied">
         <JobsList jobs={appliedJobs} isLoading={isLoading} userId={userId} />
       </TabsContent>
-      
-     
+
+
+
 
       {/* Mobile-only bottom navigation */}
       {isMobile ? (
@@ -71,8 +74,11 @@ export const JobTabs = ({
                 {appliedJobs.length}
               </Badge>
             </TabsTrigger>
-            
-            
+
+     
+
+
+
           </TabsList>
         </div>
       ) : null}

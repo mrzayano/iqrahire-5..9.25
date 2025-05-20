@@ -6,7 +6,7 @@ import { fetchPosts } from "@/actions/fetch_posts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Heart, MapPin, MessageSquare, Share2, Bookmark } from "lucide-react";
+import { Heart, MapPin, MessageSquare, Share2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Separator } from "../ui/separator";
 import Image from "next/image";
@@ -55,10 +55,7 @@ export function FeedCard() {
     });
   };
 
-  const handleBookmark = () => {
-    // Placeholder function
-    console.log("Bookmark clicked");
-  };
+
 
   return (
     <>
@@ -82,18 +79,7 @@ export function FeedCard() {
 
           <Card className="w-fulln mx-auto p-4 px-0 md:p-6 relative animate-fade-in" key={post.id}>
 
-            {/* Save icon - top right on mobile */}
-            {isMobile && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleBookmark}
-                className="absolute top-2 right-2 z-10"
-              >
-                <Bookmark className="h-5 w-5" />
-                <span className="sr-only">Save</span>
-              </Button>
-            )}
+           
 
             {/* Header */}
             <CardHeader className="pb-2">
@@ -167,10 +153,7 @@ export function FeedCard() {
                     <Share2 className="h-4 w-4 mr-1" />
                     <span className="text-xs">Share</span>
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={handleBookmark}>
-                    <Bookmark className="h-4 w-4 mr-1" />
-                    <span className="text-xs">Save</span>
-                  </Button>
+                 
                 </>
               )}
 

@@ -16,8 +16,7 @@ import {
   CheckCircle,
   XCircle,
   Share2,
-  Bookmark,
-  BookmarkCheck,
+
   Building,
   CheckSquare,
 } from "lucide-react"
@@ -30,36 +29,20 @@ interface EnhancedJobsListProps extends JobsListProps {
   userId?: string
 }
 
-export const JobsList = ({ jobs, isLoading = false,  }: EnhancedJobsListProps) => {
-  const [savingJob, setSavingJob] = useState<number | null>(null)
-  const [applyingJob, setApplyingJob] = useState<number | null>(null)
+export const JobsList = ({ jobs: initialJobs, isLoading = false }: EnhancedJobsListProps) => {
+  const [jobs, ] = useState(initialJobs)
   const [expandedJobId, setExpandedJobId] = useState<number | null>(null)
   const isMobile = useIsMobile()
 
   // Check if these are applied jobs by looking at the structure
   const isAppliedJobsList = jobs && jobs.length > 0 && "status" in jobs[0] && jobs[0].status === "Applied"
 
-  const handleJobSave = useCallback(async (job: Job) => {
-    setSavingJob(job.id)
 
-    // Simulate API call with a delay
-    setTimeout(() => {
-      // Show toast message instead of actual save
-      toast.success("Feature coming soon! Job saving will be available in a future update.")
-      setSavingJob(null)
-    }, 500)
-  }, [])
 
-  const handleJobApply = useCallback(async (job: Job) => {
-    setApplyingJob(job.id)
 
-    // Simulate API call with a delay
-    setTimeout(() => {
-      // Show toast message instead of actual apply
-      toast.success("Feature coming soon! Job application will be available in a future update.")
-      setApplyingJob(null)
-    }, 500)
-  }, [])
+  
+
+
 
   const handleShareJob = useCallback((job: Job) => {
     if (navigator.share) {
@@ -91,7 +74,7 @@ export const JobsList = ({ jobs, isLoading = false,  }: EnhancedJobsListProps) =
   if (!jobs || jobs.length === 0) {
     return <EmptyJobsState />
   }
-
+console.log(jobs, "ins");
   return (
     <div className="space-y-4">
       <AnimatePresence initial={false}>
@@ -101,11 +84,7 @@ export const JobsList = ({ jobs, isLoading = false,  }: EnhancedJobsListProps) =
             job={job}
             isMobile={isMobile}
             isExpanded={expandedJobId === job.id}
-            savingJob={savingJob}
-            applyingJob={applyingJob}
             onToggleExpand={toggleJobExpansion}
-            onSave={handleJobSave}
-            onApply={handleJobApply}
             onShare={handleShareJob}
             isAppliedJob={isAppliedJobsList}
           />
@@ -164,11 +143,7 @@ interface JobCardProps {
   job: Job
   isMobile: boolean
   isExpanded: boolean
-  savingJob: number | null
-  applyingJob: number | null
   onToggleExpand: (jobId: number) => void
-  onSave: (job: Job) => void
-  onApply: (job: Job) => void
   onShare: (job: Job) => void
   isAppliedJob?: boolean
 }
@@ -177,18 +152,16 @@ const JobCard = ({
   job,
   isMobile,
   isExpanded,
-  savingJob,
   onToggleExpand,
-  onSave,
   onShare,
   isAppliedJob = false,
 }: JobCardProps) => {
-  const jobSaved = job.isSaved
   const isRemote = job.work_mode === "remote"
   const router = useRouter()
 
   // Format the applied date if it exists
   const appliedDate = job.created_at ? new Date(job.created_at).toLocaleDateString() : null
+
 
   return (
     <motion.div
@@ -336,51 +309,19 @@ const JobCard = ({
                 className={`flex gap-2 w-full md:w-auto mt-2 ${!isMobile || isExpanded ? "flex" : "hidden md:flex"}`}
               >
                 <div className="flex gap-1">
-                  <Button
+                  {job.applied? (
+                      <Button className="bg-green-600 hover:bg-green-600"
+                  >
+                   <CheckCircle className="h-4 w-4 mr-1" /> Applied
+                  </Button>):
+                 ( <Button
                     onClick={() => router.push(`/jobs/${job.slug}`)}
                     variant={isAppliedJob ? "outline" : "default"}
                   >
                     View
-                  </Button>
-                  {!isAppliedJob && (
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onSave(job)
-                      }}
-                      className={jobSaved ? "text-primary" : ""}
-                      disabled={savingJob === job.id}
-                    >
-                      {savingJob === job.id ? (
-                        <svg
-                          className="animate-spin h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                      ) : jobSaved ? (
-                        <BookmarkCheck className="h-4 w-4" />
-                      ) : (
-                        <Bookmark className="h-4 w-4" />
-                      )}
-                    </Button>
-                  )}
+                  </Button>)}
+                  
+                 
                   <Button
                     variant="outline"
                     size="icon"

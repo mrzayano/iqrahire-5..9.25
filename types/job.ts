@@ -11,6 +11,9 @@ export type Salary = {
 }
 
 export interface Job {
+  applied: ReactNode
+  job: number
+  job_id: number
   id: number
   slug: string
   title: string
@@ -41,6 +44,7 @@ export interface Job {
   // These properties are not in the original data but used in the UI
   // They will be added by the adapter function
   isSaved?: boolean
+  
   status?: "Applied" | "Interviewed" | "Accepted" | "Rejected"
   postedDays?: number
   appliedDate?: string
@@ -63,7 +67,6 @@ export interface FilterState {
 
 export interface JobTabsProps {
   allJobs: Job[]
-  savedJobs: Job[]
   appliedJobs: Job[]
 }
 

@@ -17,6 +17,100 @@ import { filterJobs } from "@/utils/jobs/job-utils"
 import { getFilteredJobs } from "@/actions/jobs-filter"
 import { GetAppliedJobByUser } from "@/actions/fetch_applied_jobs"
 
+// Filter badge component for displaying active filters
+interface FilterBadgeProps {
+  label: string
+  onRemove: () => void
+}
+
+const FilterBadge = ({ label, onRemove }: FilterBadgeProps) => (
+  <Badge variant="secondary" className="flex gap-1 items-center">
+    {label}
+    <button onClick={onRemove} className="ml-1 hover:bg-muted rounded-full" aria-label={`Remove ${label} filter`}>
+      <X className="h-3 w-3" />
+    </button>
+  </Badge>
+)
+
+// Active filters display component
+interface ActiveFiltersDisplayProps {
+  filterState: FilterState
+  onRemoteChange: (checked: boolean) => void
+  onSavedChange: (checked: boolean) => void
+  onCountryChange: (country: string) => void
+  onCityChange: (city: string) => void
+  onDatePostedChange: (value: string) => void
+  onJobTypeChange: (type: string) => void
+  onExperienceLevelChange: (level: string) => void
+  onSkillChange: (skill: string) => void
+  onIndustryChange: (industry: string) => void
+  onApplicationTypeChange: (type: string) => void
+  onResetFilters: () => void
+}
+
+const ActiveFiltersDisplay = ({
+  filterState,
+  onRemoteChange,
+  onSavedChange,
+  onCountryChange,
+  onCityChange,
+  onDatePostedChange,
+  onJobTypeChange,
+  onExperienceLevelChange,
+  onSkillChange,
+  onIndustryChange,
+  onApplicationTypeChange,
+  onResetFilters,
+}: ActiveFiltersDisplayProps) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-wrap gap-2 mb-6 p-3 bg-muted/30 rounded-lg"
+    >
+      <div className="text-sm text-muted-foreground mr-2 mt-1">Active filters:</div>
+
+      {filterState.remoteOnly && <FilterBadge label="Remote only" onRemove={() => onRemoteChange(false)} />}
+      {filterState.savedOnly && <FilterBadge label="Saved jobs" onRemove={() => onSavedChange(false)} />}
+
+      {filterState.selectedCountries.map((country) => (
+        <FilterBadge key={country} label={country} onRemove={() => onCountryChange(country)} />
+      ))}
+
+      {filterState.selectedCities.map((city) => (
+        <FilterBadge key={city} label={city} onRemove={() => onCityChange(city)} />
+      ))}
+
+      {filterState.datePosted && <FilterBadge label={filterState.datePosted} onRemove={() => onDatePostedChange("")} />}
+
+      {filterState.selectedJobTypes.map((type) => (
+        <FilterBadge key={type} label={type} onRemove={() => onJobTypeChange(type)} />
+      ))}
+
+      {filterState.selectedExperienceLevels.map((level) => (
+        <FilterBadge key={level} label={level} onRemove={() => onExperienceLevelChange(level)} />
+      ))}
+
+      {filterState.selectedSkills.map((skill) => (
+        <FilterBadge key={skill} label={skill} onRemove={() => onSkillChange(skill)} />
+      ))}
+
+      {filterState.selectedIndustries.map((industry) => (
+        <FilterBadge key={industry} label={industry} onRemove={() => onIndustryChange(industry)} />
+      ))}
+
+      {filterState.selectedApplicationTypes.map((type) => (
+        <FilterBadge key={type} label={type} onRemove={() => onApplicationTypeChange(type)} />
+      ))}
+
+      <Button variant="ghost" size="sm" onClick={onResetFilters} className="h-7 ml-auto" aria-label="Clear all filters">
+        Clear all
+      </Button>
+    </motion.div>
+  )
+}
+
+// Main Jobs component props
 interface JobsProps {
   initialJobs: Job[]
   filterOptions: {
@@ -31,36 +125,70 @@ interface JobsProps {
   userId?: string
 }
 
+/**
+ * Jobs Component - Displays job listings with advanced filtering capabilities
+ *
+ * Features:
+ * - Search functionality
+ * - Filter by location, job type, experience, skills, etc.
+ * - Responsive design with mobile-optimized filter sheet
+ * - Saved and applied job tracking
+ * - Server and client-side filtering
+ */
 const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
-  // Filter state
-  const [filterState, setFilterState] = useState<FilterState>({
-    searchQuery: "",
-    savedOnly: false,
-    remoteOnly: false,
-    selectedCountries: [],
-    selectedCities: [],
-    selectedJobTypes: [],
-    selectedExperienceLevels: [],
-    selectedSkills: [],
-    selectedIndustries: [],
-    selectedApplicationTypes: [],
-    datePosted: "",
-    salaryRange: [30, 150],
-  })
+  // Default filter state (memoized)
+  const defaultFilterState = useMemo<FilterState>(
+    () => ({
+      searchQuery: "",
+      savedOnly: false,
+      remoteOnly: false,
+      selectedCountries: [],
+      selectedCities: [],
+      selectedJobTypes: [],
+      selectedExperienceLevels: [],
+      selectedSkills: [],
+      selectedIndustries: [],
+      selectedApplicationTypes: [],
+      datePosted: "",
+      salaryRange: [30, 150],
+    }),
+    [],
+  )
 
+  // State management
+  const [filterState, setFilterState] = useState<FilterState>(defaultFilterState)
   const [isLoading, setIsLoading] = useState(false)
   const [jobs] = useState<Job[]>(initialJobs)
-  const [filteredJobs, setFilteredJobs] = useState<Job[]>(initialJobs)
-  const [savedJobs] = useState<Job[]>([])
+  const [, setFilteredJobs] = useState<Job[]>(initialJobs)
   const [appliedJobs, setAppliedJobs] = useState<Job[]>([])
   const [showMobileFilterSheet, setShowMobileFilterSheet] = useState(false)
+
+  // Refs and hooks
   const mainContentRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
 
   // Extract filter options
   const { countries, cities, skills, industries, applicationTypes } = filterOptions
 
-  // Apply filters when filter state changes
+  /**
+   * Determines if server-side filtering is needed based on active filters
+   */
+  const hasActiveServerFilters = useCallback((filters: FilterState): boolean => {
+    return (
+      filters.remoteOnly ||
+      filters.selectedCountries.length > 0 ||
+      filters.selectedCities.length > 0 ||
+      filters.selectedJobTypes.length > 0 ||
+      filters.selectedExperienceLevels.length > 0 ||
+      filters.selectedIndustries.length > 0 ||
+      filters.selectedApplicationTypes.length > 0 ||
+      filters.datePosted !== ""
+    )
+  }, [])
+
+  /**
+   * Apply filters when filter state changes
+   */
   useEffect(() => {
     const applyFilters = async () => {
       try {
@@ -90,37 +218,29 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
     }
 
     applyFilters()
-  }, [filterState, jobs])
+  }, [filterState, jobs, hasActiveServerFilters])
 
-  //fetch applied job by current user
-    useEffect(() => {
-    const appliedJob = async () => {
+  /**
+   * Fetch applied jobs by current user
+   */
+  useEffect(() => {
+    const fetchAppliedJobs = async () => {
       try {
-        const data = await GetAppliedJobByUser();
-        setAppliedJobs(data);
+        const data = await GetAppliedJobByUser()
+        setAppliedJobs(data)
       } catch (error) {
         console.error("Failed to fetch applied jobs:", error)
       }
-    };
+    }
 
-    appliedJob();
-  }, []);
+    fetchAppliedJobs()
+  }, [])
 
-  // Check if we have filters that are better handled by the server
-  const hasActiveServerFilters = (filters: FilterState): boolean => {
-    return (
-      filters.remoteOnly ||
-      filters.selectedCountries.length > 0 ||
-      filters.selectedCities.length > 0 ||
-      filters.selectedJobTypes.length > 0 ||
-      filters.selectedExperienceLevels.length > 0 ||
-      filters.selectedIndustries.length > 0 ||
-      filters.selectedApplicationTypes.length > 0 ||
-      filters.datePosted !== ""
-    )
-  }
+  /**
+   * Fetch saved jobs by current user
+   */
 
-  // Filter handlers
+  // Filter handlers with useCallback to prevent unnecessary re-renders
   const handleSearchQueryChange = useCallback((value: string) => {
     setFilterState((prev) => ({ ...prev, searchQuery: value }))
   }, [])
@@ -200,30 +320,30 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
     setFilterState((prev) => ({ ...prev, salaryRange: range }))
   }, [])
 
-  const resetFilters = useCallback(() => {
-    setFilterState({
-      searchQuery: "",
-      savedOnly: false,
-      remoteOnly: false,
-      selectedCountries: [],
-      selectedCities: [],
-      selectedJobTypes: [],
-      selectedExperienceLevels: [],
-      selectedSkills: [],
-      selectedIndustries: [],
-      selectedApplicationTypes: [],
-      datePosted: "",
-      salaryRange: [30, 150],
-    })
-    setShowMobileFilterSheet(false)
-    toast.success("Filters reset")
+  const handleSavedOnlyChange = useCallback((checked: boolean) => {
+    setFilterState((prev) => ({ ...prev, savedOnly: checked }))
   }, [])
 
+  /**
+   * Reset all filters to default state
+   */
+  const resetFilters = useCallback(() => {
+    setFilterState(defaultFilterState)
+    setShowMobileFilterSheet(false)
+    toast.success("Filters reset")
+  }, [defaultFilterState])
+
+  /**
+   * Apply filters and close mobile filter sheet
+   */
   const applyFilters = useCallback(() => {
     setShowMobileFilterSheet(false)
     toast.success("Filters applied")
   }, [])
 
+  /**
+   * Check if any filters are active
+   */
   const hasActiveFilters = useMemo(() => {
     return (
       filterState.selectedCountries.length > 0 ||
@@ -235,15 +355,31 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
       filterState.selectedSkills.length > 0 ||
       filterState.selectedIndustries.length > 0 ||
       filterState.selectedApplicationTypes.length > 0 ||
-      filterState.datePosted
+      filterState.datePosted !== ""
     )
   }, [filterState])
 
-  
+  /**
+   * Merge saved job status with filtered jobs
+   */
+
+  /**
+   * Merge applied job status with all jobs
+   */
+const jobsWithAppliedStatus = useMemo(() => {
+  return jobs.map((job) => ({
+    ...job,
+    applied: appliedJobs.some((appliedJob) => appliedJob.job_id === job.id),
+  }))
+}, [jobs, appliedJobs])
+console.log(jobsWithAppliedStatus,appliedJobs[0]?.job_id, "sf");
+
 
   
+
   return (
     <div className="container py-8 max-w-7xl mx-auto" ref={mainContentRef}>
+      {/* Header section */}
       <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Find Your Next Opportunity</h1>
@@ -255,6 +391,7 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
         <JobPostingButton />
       </div>
 
+      {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters sidebar - visible on desktop with sticky positioning */}
         <div className="lg:col-span-1 space-y-4 hidden lg:block">
@@ -293,7 +430,7 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
           </div>
         </div>
 
-        {/* Jobs listing */}
+        {/* Jobs listing section */}
         <div className="lg:col-span-3">
           {/* Search and mobile filters */}
           <div className="space-y-4 mb-6">
@@ -346,7 +483,7 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
             <ActiveFiltersDisplay
               filterState={filterState}
               onRemoteChange={handleRemoteChange}
-              onSavedChange={(checked) => setFilterState((prev) => ({ ...prev, savedOnly: checked }))}
+              onSavedChange={handleSavedOnlyChange}
               onCountryChange={handleCountryChange}
               onCityChange={handleCityChange}
               onDatePostedChange={handleDatePostedChange}
@@ -361,111 +498,12 @@ const Jobs = ({ initialJobs, filterOptions, userId }: JobsProps) => {
 
           {/* Job tabs container with padding for mobile bottom nav */}
           <div className={`${isMobile ? "pb-20" : ""}`}>
-            <JobTabs
-              allJobs={filteredJobs}
-              savedJobs={savedJobs}
-              appliedJobs={appliedJobs}
-              isLoading={isLoading}
-              userId={userId}
-            />
+            <JobTabs allJobs={jobsWithAppliedStatus} appliedJobs={appliedJobs} isLoading={isLoading} userId={userId} />
           </div>
         </div>
       </div>
     </div>
   )
 }
-
-// Extracted component for active filters display
-interface ActiveFiltersDisplayProps {
-  filterState: FilterState
-  onRemoteChange: (checked: boolean) => void
-  onSavedChange: (checked: boolean) => void
-  onCountryChange: (country: string) => void
-  onCityChange: (city: string) => void
-  onDatePostedChange: (value: string) => void
-  onJobTypeChange: (type: string) => void
-  onExperienceLevelChange: (level: string) => void
-  onSkillChange: (skill: string) => void
-  onIndustryChange: (industry: string) => void
-  onApplicationTypeChange: (type: string) => void
-  onResetFilters: () => void
-}
-
-const ActiveFiltersDisplay = ({
-  filterState,
-  onRemoteChange,
-  onSavedChange,
-  onCountryChange,
-  onCityChange,
-  onDatePostedChange,
-  onJobTypeChange,
-  onExperienceLevelChange,
-  onSkillChange,
-  onIndustryChange,
-  onApplicationTypeChange,
-  onResetFilters,
-}: ActiveFiltersDisplayProps) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-wrap gap-2 mb-6 p-3 bg-muted/30 rounded-lg"
-    >
-      <div className="text-sm text-muted-foreground mr-2 mt-1">Active filters:</div>
-
-      {filterState.remoteOnly && <FilterBadge label="Remote only" onRemove={() => onRemoteChange(false)} />}
-
-      {filterState.savedOnly && <FilterBadge label="Saved jobs" onRemove={() => onSavedChange(false)} />}
-
-      {filterState.selectedCountries.map((country) => (
-        <FilterBadge key={country} label={country} onRemove={() => onCountryChange(country)} />
-      ))}
-
-      {filterState.selectedCities.map((city) => (
-        <FilterBadge key={city} label={city} onRemove={() => onCityChange(city)} />
-      ))}
-
-      {filterState.datePosted && <FilterBadge label={filterState.datePosted} onRemove={() => onDatePostedChange("")} />}
-
-      {filterState.selectedJobTypes.map((type) => (
-        <FilterBadge key={type} label={type} onRemove={() => onJobTypeChange(type)} />
-      ))}
-
-      {filterState.selectedExperienceLevels.map((level) => (
-        <FilterBadge key={level} label={level} onRemove={() => onExperienceLevelChange(level)} />
-      ))}
-
-      {filterState.selectedSkills.map((skill) => (
-        <FilterBadge key={skill} label={skill} onRemove={() => onSkillChange(skill)} />
-      ))}
-
-      {filterState.selectedIndustries.map((industry) => (
-        <FilterBadge key={industry} label={industry} onRemove={() => onIndustryChange(industry)} />
-      ))}
-
-      {filterState.selectedApplicationTypes.map((type) => (
-        <FilterBadge key={type} label={type} onRemove={() => onApplicationTypeChange(type)} />
-      ))}
-
-      <Button variant="ghost" size="sm" onClick={onResetFilters} className="h-7 ml-auto">
-        Clear all
-      </Button>
-    </motion.div>
-  )
-}
-
-interface FilterBadgeProps {
-  label: string
-  onRemove: () => void
-}
-
-const FilterBadge = ({ label, onRemove }: FilterBadgeProps) => (
-  <Badge variant="secondary" className="flex gap-1 items-center">
-    {label}
-    <button onClick={onRemove} className="ml-1 hover:bg-muted rounded-full">
-      <X className="h-3 w-3" />
-    </button>
-  </Badge>
-)
 
 export default Jobs

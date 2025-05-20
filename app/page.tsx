@@ -941,9 +941,7 @@ export default function Page() {
                           <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
                             Apply Now
                           </Button>
-                          <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                            Save <Bell className="ml-1 h-4 w-4" />
-                          </Button>
+                         
                         </div>
                       </CardContent>
                     </Card>
@@ -999,9 +997,7 @@ export default function Page() {
                         <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
                           Apply Now
                         </Button>
-                        <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                          Save <Bell className="ml-1 h-4 w-4" />
-                        </Button>
+                        
                       </div>
                     </CardContent>
                   </Card>
@@ -1058,9 +1054,7 @@ export default function Page() {
                           <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
                             Apply Now
                           </Button>
-                          <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                            Save <Bell className="ml-1 h-4 w-4" />
-                          </Button>
+                          
                         </div>
                       </CardContent>
                     </Card>
@@ -1117,9 +1111,7 @@ export default function Page() {
                           <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
                             Apply Now
                           </Button>
-                          <Button variant="ghost" className="text-gray-500 hover:text-gray-700">
-                            Save <Bell className="ml-1 h-4 w-4" />
-                          </Button>
+                          
                         </div>
                       </CardContent>
                     </Card>

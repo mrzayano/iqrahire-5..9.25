@@ -1,5 +1,5 @@
 import Jobs from "@/components/jobs/Jobs"
-import { getAllJobs } from "@/actions/jobs"
+import { getAllJobs } from "@/actions/get_jobs"
 import { getFilterOptions } from "@/actions/jobs-filter"
 
 export default async function JobsPage() {
