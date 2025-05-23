@@ -12,11 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Search, Bell, Plus,  MessageSquare, LineChart } from "lucide-react"
+import { Search, Bell, Plus, MessageSquare, LineChart } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { UnderDevelopment } from "@/components/shared/UnderDevelopment"
-import { SignOutButton } from "@clerk/nextjs"
+import { SignOutButton, useUser } from "@clerk/nextjs"
 import { SidebarTrigger } from "../ui/sidebar"
 import { MobileBottomNav } from "./mobile-bottom-nav"
 
@@ -27,7 +27,7 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children, onOpenCreatePost }: RootLayoutProps) => {
   const isMobile = useIsMobile()
-
+  const {  user } = useUser()
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Header */}
@@ -85,7 +85,7 @@ const RootLayout = ({ children, onOpenCreatePost }: RootLayoutProps) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src={user?.imageUrl || ""} />
                     <AvatarFallback>JD</AvatarFallback>
                   </Avatar>
                 </Button>

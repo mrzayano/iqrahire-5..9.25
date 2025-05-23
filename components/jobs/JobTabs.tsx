@@ -27,14 +27,14 @@ export const JobTabs = ({
           <TabsTrigger value="all" className="px-4">
             <Briefcase className="h-4 w-4 mr-2" />
             All Jobs
-            <Badge variant="secondary" className="ml-2 bg-muted">
+            <Badge variant="outline" className="ml-2 bg-muted ">
               {allJobs.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="applied" className="px-4">
             <Clock className="h-4 w-4 mr-2" />
             Applied
-            <Badge variant="secondary" className="ml-2 bg-muted">
+            <Badge variant="outline" className="ml-2 bg-muted">
               {appliedJobs.length}
             </Badge>
           </TabsTrigger>

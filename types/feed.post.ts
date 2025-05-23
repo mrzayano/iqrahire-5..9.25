@@ -7,13 +7,13 @@ export interface Author {
 }
 
 export interface Post {
-  id: string;
-  content: string;
+  id?: string;
+  content?: string;
   image_url?: string;
   created_at: string;
-  like_count: number;
-  hasLiked: boolean;
-  author:Author
+  like_count?: number;
+  hasLiked?: boolean;
+  author?:Author
 }
 
 

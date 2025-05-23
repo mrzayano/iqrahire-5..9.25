@@ -41,12 +41,13 @@ export function FeedCard() {
           ? {
             ...p,
             hasLiked: !p.hasLiked,
-            like_count: p.hasLiked ? p.like_count - 1 : p.like_count + 1,
+            like_count: p.hasLiked ? (p.like_count ?? 0) - 1 : (p.like_count ?? 0) + 1,
           }
           : p
       );
       setPosts(updatedPosts);
 
+      if (!post.id) return;
       if (post.hasLiked) {
         unlikePost(post.id);
       } else {
@@ -86,14 +87,14 @@ export function FeedCard() {
               <div className="flex items-start justify-between">
                 <div className="flex gap-4">
                   <Avatar>
-                    <AvatarImage src={post.author.avatar} />
-                    <AvatarFallback>{post.author.name.substring(0, 2)}</AvatarFallback>
+                    <AvatarImage src={post.author?.avatar} />
+                    <AvatarFallback>{post.author?.name?.substring(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="text-base">{post.author.name}</CardTitle>
+                    <CardTitle className="text-base">{post.author?.name}</CardTitle>
                     <CardDescription className="flex items-center gap-1 text-xs">
                       <MapPin className="h-3 w-3" />
-                      <span>{post.author.location}</span>
+                      <span>{post.author?.location}</span>
                     </CardDescription>
                     <div className="text-xs text-muted-foreground">
                       {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}

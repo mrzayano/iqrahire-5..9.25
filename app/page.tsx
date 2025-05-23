@@ -524,7 +524,7 @@ export default function Page() {
                 <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="relative">
                   <Image
-                    src="/images/hero-person.webp"
+                    src="/images/hero-person-1.png"
                     alt="Person using IqraHire app"
                     width={500}
                     height={600}
@@ -1177,7 +1177,7 @@ export default function Page() {
                   viewport={{ once: true }}
                   variants={fadeIn}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-shadow"
                 >
                   <div className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-4`}>
                     <feature.icon className={`h-6 w-6 ${feature.iconColor}`} />

@@ -1,24 +1,33 @@
 "use client";
 import Image from "next/image";
-import { BookOpen, Briefcase, ChartNoAxesColumnIncreasing, Home, MessageSquare, Users } from "lucide-react";
+import { BookOpen, Briefcase, Home, MessageSquare, Users } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { usePathname } from 'next/navigation';  // Use usePathname from next/navigation
 import { useEffect, useState } from 'react';
 
+
+const UsthadIcon = () => (
+  <Image
+    src={"icons/usthad.svg"} 
+    alt={""}  
+    width={20}
+    height={20}/>
+);
 // Menu items.
 const routes = [
   { url: "/feed", icon: Home, label: "Feed" },
   { url: "/network", icon: Users, label: "Network" },
   { url: "/jobs", icon: Briefcase, label: "Jobs" },
+  { url: "/usthad-jobs", icon: UsthadIcon, label: "Usthad Jobs" },
   { url: "/messages", icon: MessageSquare, label: "Messages" },
   { url: "/learning", icon: BookOpen, label: "Learning" },
-  { url: "/dashboard", icon: ChartNoAxesColumnIncreasing, label: "Dashboard" },
+  // { url: "/dashboard", icon: ChartNoAxesColumnIncreasing, label: "Dashboard" },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar(); // Already in your code
   const pathname = usePathname();  // Use usePathname to get the current path
-  
+
   const [isClient, setIsClient] = useState(false);
 
   // Set isClient to true once the component has mounted on the client side
