@@ -26,6 +26,8 @@ export function FeedCard() {
     const fetchAndSetPosts = async () => {
       setIsLoading(true);
       const fetchedPosts: Post[] = await Promise.all(await fetchPosts());
+      console.log("fetch posts", fetchedPosts);
+      
       setPosts(fetchedPosts);
       setIsLoading(false);
     };

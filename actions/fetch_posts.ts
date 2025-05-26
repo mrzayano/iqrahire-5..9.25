@@ -1,5 +1,5 @@
 "use server";
-import { supabase } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/client";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function fetchPosts() {

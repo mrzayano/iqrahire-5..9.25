@@ -24,14 +24,14 @@ export const JobTabs = ({
       {/* Non-mobile tabs display at top */}
       
         <TabsList className="mb-6 w-full overflow-x-auto flex whitespace-nowrap sm:justify-start">
-          <TabsTrigger value="all" className="px-4">
+          <TabsTrigger value="all" className="px-4 shadow-none data-[state=active]:shadow-none ">
             <Briefcase className="h-4 w-4 mr-2" />
             All Jobs
             <Badge variant="outline" className="ml-2 bg-muted ">
               {allJobs.length}
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="applied" className="px-4">
+          <TabsTrigger value="applied" className="px-4 data-[state=active]:shadow-none ">
             <Clock className="h-4 w-4 mr-2" />
             Applied
             <Badge variant="outline" className="ml-2 bg-muted">

@@ -14,6 +14,7 @@ import ProfileExperience from "./ProfileExperience";
 import ProfileEducation from "./ProfileEducation";
 import ProfileSkills from "./ProfileSkills";
 import ProfilePost from "./ProfilePost";
+import { Skeleton } from "../ui/skeleton";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState<User>();
@@ -59,12 +60,35 @@ const ProfilePage = () => {
 
   return (
     <div className="w-full overflow-x-hidden mx-auto max-w-full p-0 sm:px-6 sm:py-4 md:py-8">
-      {/* Profile Header */}
-      {userData ? (
-        <ProfileHeader userDetails={userData} />
-      ) : (
-        <div>Loading...</div>
-      )}
+    {userData ? (
+  <ProfileHeader userDetails={userData} />
+) : (
+  <div className="mb-8">
+    <div className="relative h-40 sm:h-52 md:h-60 bg-muted overflow-hidden">
+      <Skeleton className="w-full h-full absolute top-0 left-0" />
+    </div>
+    <div className="relative px-6 sm:px-10 pb-6 pt-4">
+      <div className="absolute -top-12 sm:-top-16 left-6 sm:left-10">
+        <Skeleton className="size-24 sm:size-32 rounded-full border-4 border-background shadow-md" />
+      </div>
+      <div className="pt-16 sm:pt-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-6 sm:h-8 w-3/5" />
+          <Skeleton className="h-4 w-2/5" />
+          <Skeleton className="h-4 w-1/4" />
+        </div>
+        <div className="flex gap-2 sm:gap-3 flex-wrap">
+          <Skeleton className="h-8 w-24 rounded-md" />
+        </div>
+      </div>
+      <div className="mt-6 max-w-lg space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-2 w-full" />
+      </div>
+    </div>
+  </div>
+)}
+
 
       
       {/* Tabs */}

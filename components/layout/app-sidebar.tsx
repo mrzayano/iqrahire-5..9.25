@@ -1,4 +1,4 @@
-"use client";
+
 import Image from "next/image";
 import { BookOpen, Briefcase, Home, MessageSquare, Users } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -49,6 +49,7 @@ export function AppSidebar() {
             width={200}
             height={40}
             className="object-contain transition-all duration-200"
+            onClick={() => window.location.href = '/'}
           />
           {state !== 'collapsed' && (
             <span className="text-2xl font-bold text-primary ml-2 transition-opacity duration-200 flex">
