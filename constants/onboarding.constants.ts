@@ -31,4 +31,21 @@ export const INDUSTRIES = [
     "Unemployed",
     "Other",
   ]
+
+  export const ROLE_INDUSTRY_MAP: Record<string, string[]> = {
+  Student: ["Education", "Technology"],
+  Graduate: ["Technology", "Finance", "Education"],
+  "Entry Level Professional": ["Technology", "Finance", "Healthcare"],
+  "Mid-Level Professional": ["Technology", "Healthcare", "Retail"],
+  "Senior Professional": ["Healthcare", "Finance", "Manufacturing"],
+  Manager: ["Retail", "Construction", "Legal"],
+  Director: ["Finance", "Government", "Legal"],
+  Executive: ["Energy", "Transportation", "Government"],
+  Freelancer: ["Media & Entertainment", "Technology", "Consultant"],
+  Entrepreneur: ["Technology", "Retail", "Media & Entertainment"],
+  Consultant: ["Finance", "Legal", "Education"],
+  Unemployed: INDUSTRIES,
+  Other: INDUSTRIES,
+}
+
   

@@ -7,10 +7,6 @@ import { motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Select, SelectTrigger, SelectValue,
-  SelectContent, SelectItem,
-} from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -20,8 +16,8 @@ import {
 } from "@/components/ui/form"
 
 import { OnboardingFormValues } from "@/schema/onboarding.schema"
-import { INDUSTRIES, ROLES } from "@/constants/onboarding.constants"
-import {  DobPickerContent } from "../ui/dob-picker"
+import ProfessionalStep from "./ProfessionalStep"
+import { DobPickerContent } from "../ui/dob-picker"
 
 interface OnboardingStepContentProps {
   step: number
@@ -53,7 +49,6 @@ export function OnboardingStepContent({ step, form }: OnboardingStepContentProps
                       <Input
                         placeholder={name === "firstName" ? "John" : "Doe"}
                         {...field}
-                        name={String(field.name)}
                         value={
                           typeof field.value === "string" || !field.value
                             ? field.value
@@ -166,38 +161,7 @@ export function OnboardingStepContent({ step, form }: OnboardingStepContentProps
     case 3:
       return (
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-          {(["role", "industry"] as (keyof OnboardingFormValues)[]).map((fieldName) => {
-            const opts = fieldName === "role" ? ROLES : INDUSTRIES
-            const label = fieldName === "role" ? "Current Role" : "Industry"
-
-            return (
-              <FormField
-                key={fieldName as string}
-                control={control}
-                name={fieldName}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{label}</FormLabel>
-                    <FormControl>
-                      <Select onValueChange={field.onChange} value={typeof field.value === "string" ? field.value : field.value?.toISOString() || ""}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={`Select ${label.toLowerCase()}`} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {opts.map((opt) => (
-                            <SelectItem key={opt} value={opt}>
-                              {opt}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )
-          })}
+          <ProfessionalStep control={control} />
 
           <InfoBox
             title="This information helps us personalize your experience with:"
